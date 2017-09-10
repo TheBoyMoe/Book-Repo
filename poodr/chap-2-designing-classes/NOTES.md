@@ -8,7 +8,7 @@ The Agile process guarantees change. Your ability to make changes depends on you
 
 OO languages combine data and behaviour found in procedural languages into objects. BY encapsulating data, objects decide how much of the data they expose ot the world. Ruby is a Class-based OO language. A class is a blueprint for the construction of similar objects - they define methods (behaviour) and attributes/variables (data).  Object's invoke one another's methods as a means of sending messages. Each object instantiated from the same class, although having the same methods, behaviour, can have it's own data.
 
-The foundation of OOD is the message, but the most visible organisational structure is the class. To begin with, the goal is to model your application using classes. Follow these steps:
+The foundation of OOD is the message, but the most visible organisational structure is the class. The path to changeable and maintainable object-oriented software begins with classes that have a single responsibility. Classes that do one thing isolate that thing from the rest of your application. This isolation allows change without consequence and reuse without duplication. To model your application using classes, follow these steps:
 
 1. Decide what methods belongs in a class - what classes you create will determine how you think about the application
 
@@ -107,7 +107,7 @@ However, by encapsulating variables in this manner, your now making them visible
 
 The 'ObscuringReferences' class expects to be initialized with a 2d-array, which is accessible via the 'data' method. For 'data' to be useful, each caller of the method, e.g. 'diameters' must know what piece of data is at each index. Thus 'diameters', not only knows how to calculate diameters, but must also know that rims are at index [0] and tires are at index [1]. Which depends on the arrays structure. If that changes, 'diameters' needs to be changed. Any other place in our code that calls 'data' must also have that knowledge. The code is not DRY, since the knowledge needs to be duplicated - this knowledge should be known in just one place.
 
-Ruby provides the 'Struct' class as a means to separate structure from meaning, e.g.
+Ruby provides the 'Struct' class(allows you to bundle a number of attributes together within a object, and access those attributes using accessor methods) as a means to separate structure from meaning, e.g.
 
 ```ruby
   class RevealingReferences
@@ -129,4 +129,72 @@ Ruby provides the 'Struct' class as a means to separate structure from meaning, 
   end
 ```
 
-The 'diameters' method above knows nothing of the structure of the data array. All it knows is that 'wheels' returns an enumerable, each enumerated object(wheel) responds to 'rim' and 'tire'.
+The 'diameters' method above knows nothing of the structure of the data array. All it knows is that 'wheels' returns an enumerable, each enumerated object(wheel) responds to 'rim' and 'tire'. Where before we were using 'cell[0]', we can now use 'wheel.rim'. Knowledge of the structure of the 'data' has been isolated to the 'wheelify' method. Should the structure of 'data' change, this is the only location in the code that need to change - 'DRYs' out your code.
+
+6. Ensure that your methods implement a single responsibility
+    - makes them easy to change and reuse.
+    - use the same techniques of asking 'them' questions and describing their responsibility in a single sentence.
+
+The diameters class above has 2 responsibilities, it iterates over the wheels collection and calculates the diameter of each wheel in turn. Simplify the code by separating the 2 responsibilities, e.g.
+
+```ruby
+  # first - iterate over the array
+  def diameters
+    wheels.collect {|wheel| diameter(wheel)}
+  end
+
+  # second - calculate diameter of ONE wheel
+  def diameter(wheel)
+    wheel.rim + (wheel.tire * 2)
+  end
+```
+
+Ensuring that methods only implement a single responsibility has a number of benefits
+  - makes the different behaviours the class has obvious.
+  - method names serve as a means of documenting your code without the need for comments. If code within a method requires a comment, extract it to it's own method.
+  - encourages reuse
+  - makes it easier to move methods to other classes without a lot of refactoring - improving the overall design.
+  - the scope of your class will be apparent. Having an object like Wheel inside Gear suggests that you expect that a Wheel will only exist in the context of a Gear. In the real-world this is not so. In such cases we create a separate Wheel class. This makes it easier in future to add further functionality relatively painlessly, e.g. requiring a method to calculate wheel circumference.
+
+```ruby
+  # final classes
+  class Gear
+    attr_reader :chainring, :cog, :wheel
+    def initialize(chainring, cog, wheel=nil)
+      @chainring = chainring
+      @cog       = cog
+      @wheel     = wheel
+    end
+
+    def ratio
+      chainring / cog.to_f
+    end
+
+    def gear_inches
+      ratio * wheel.diameter
+    end
+  end
+
+  class Wheel
+    attr_reader :rim, :tire
+
+    def initialize(rim, tire)
+      @rim       = rim
+      @tire      = tire
+    end
+
+    def diameter
+      rim + (tire * 2)
+    end
+
+    def circumference
+      diameter * Math::PI
+    end
+  end
+```  
+
+
+
+### Resources
+1. [POODR Github Repo](https://github.com/skmetz/poodr)
+2. [Book summary](https://medium.com/ruby-on-rails/what-i-learned-from-sandi-metz-9d0c94347b7f)
