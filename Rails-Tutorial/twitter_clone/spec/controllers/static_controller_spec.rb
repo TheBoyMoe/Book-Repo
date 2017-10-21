@@ -29,9 +29,15 @@ RSpec.describe StaticController, type: :controller do
   end
 
   describe "GET #about" do
+    before(:example) {get :about}
+    render_views
+
     it "returns http success" do
-      get :about
       expect(response).to have_http_status(200)
+    end
+
+    it "has a title tag with the text 'About | Twitter Clone App'" do
+      expect(response.body).to include('<title>About | Twitter Clone App</title>')
     end
   end
 

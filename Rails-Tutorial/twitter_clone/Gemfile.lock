@@ -391,6 +391,7 @@ DEPENDENCIES
   pry
   pry-byebug
   puma (= 3.9.1)
+  rack-test
   rails (= 5.1.2)
   rspec-rails (~> 3.6)
   sass-rails (= 5.0.6)
