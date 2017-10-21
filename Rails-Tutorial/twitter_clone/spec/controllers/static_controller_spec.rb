@@ -3,9 +3,15 @@ require 'rails_helper'
 RSpec.describe StaticController, type: :controller do
 
   describe "GET #home" do
+    before(:example) {get :home}
+    render_views
+
     it "returns http success" do
-      get :home
       expect(response).to have_http_status(:success)
+    end
+
+    it "has a title element with the text 'Home | Twitter Clone App'" do
+      expect(response.body).to include("<title>Home | Twitter Clone App</title>")
     end
   end
 
