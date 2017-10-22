@@ -8,7 +8,7 @@ RSpec.describe "static/about.html.erb", type: :view do
       visit '/static/about'
     end
 
-    it "has a title tag with the text 'About | Twitter Clone App' and a page tile" do
+    it "has a title tag with the text 'About | Twitter Clone App' and a page heading" do
       expect(page.body).to include("<title>About | #{@base_title}</title>")
       find('h1', text: 'About Page')
     end
