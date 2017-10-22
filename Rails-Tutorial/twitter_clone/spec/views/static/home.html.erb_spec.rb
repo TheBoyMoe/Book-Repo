@@ -21,7 +21,7 @@ RSpec.describe "static/home.html.erb", type: :view do
 
     it "has a title element with the text 'Home | Twitter Clone App' and a page heading" do
       expect(page.body).to include("<title>Home | #{@base_title}</title>")
-      find('h1', text: 'Sample App')
+      find('h1', text: 'Welcome to the Sample App')
     end
   end
 
