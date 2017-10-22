@@ -1,5 +1,17 @@
 require 'rails_helper'
 
 RSpec.describe "static/home.html.erb", type: :view do
-  pending "add some examples to (or delete) #{__FILE__}"
+
+  describe "GET 'static/home'", :type => :feature do
+    before(:each) do
+      @base_title = 'Twitter Clone App'
+      visit '/static/home'
+    end
+
+    it "has a title element with the text 'Home | Twitter Clone App' and a page title" do
+      expect(page.body).to include("<title>Home | #{@base_title}</title>")
+      find('h1', text: 'Sample App')
+    end
+  end
+
 end
