@@ -51,4 +51,9 @@ RSpec.describe User, type: :model do
     expect(user2).not_to be_valid
   end
 
+  it "ensures email address are saved as lowercase" do
+    user.update_attribute(:email, 'FoO@BAR.com')
+    expect(user.reload.email).to eq('foo@bar.com')
+  end
+
 end
