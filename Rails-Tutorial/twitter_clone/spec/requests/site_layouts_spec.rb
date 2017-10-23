@@ -27,6 +27,11 @@ RSpec.describe "SiteLayouts", type: :request do
       expect(page).to have_title(full_title('Help'))
     end
 
+    it "click on the 'Signup' link opens the signup page" do
+      click_link 'Sign up now!'
+      expect(page).to have_title(full_title('Signup'))
+    end
+
     it "click on the 'Login' link opens the login page"
 
     it "Click on the 'News' link redirects the user to 'http://news.railstutroial.org'"

@@ -14,6 +14,7 @@ RSpec.describe "static/home.html.erb", type: :view do
     it "has the content 'Welcome to the Sample App'" do
       expect(page.body).to have_content('Welcome to the Sample App')
     end
+
   end
 
 end
