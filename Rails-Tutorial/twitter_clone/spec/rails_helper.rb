@@ -21,6 +21,9 @@ RSpec.configure do |config|
 
   config.include Capybara::DSL
 
+  # include application helper methods in your tests 
+  config.include ApplicationHelper
+
   # configure database cleaner
   config.before(:suite) do
     DatabaseCleaner.clean_with(:truncation)
