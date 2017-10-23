@@ -5,7 +5,7 @@ RSpec.describe "static/home.html.erb", type: :view do
   describe "GET '/'", :type => :feature do
     before(:each) do
       @base_title = 'Twitter Clone App'
-      visit '/'
+      visit root_path
     end
 
     it "has a title element with the text 'Home | Twitter Clone App'" do
