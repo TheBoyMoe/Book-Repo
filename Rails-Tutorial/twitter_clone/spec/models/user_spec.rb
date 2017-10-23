@@ -1,12 +1,15 @@
 require 'rails_helper'
 
 RSpec.describe User, type: :model do
-  let!(:user) {User.create(name: 'user', email: 'user@example.com')}
+  let!(:user) {User.create(name: 'user', email: 'user@example.com', password: 'password', password_confirmation: 'password')}
 
   it "is a valid user" do
     expect(user).to be_valid
     expect(user).to respond_to(:name)
     expect(user).to respond_to(:email)
+    expect(user).to respond_to(:password_digest)
+    expect(user).to respond_to(:password)
+    expect(user).to respond_to(:password_confirmation)
   end
 
   it "should have a value for the name attribute" do
@@ -51,9 +54,24 @@ RSpec.describe User, type: :model do
     expect(user2).not_to be_valid
   end
 
-  it "ensures email address are saved as lowercase" do
+  it "should ensure email address are saved as lowercase" do
     user.update_attribute(:email, 'FoO@BAR.com')
     expect(user.reload.email).to eq('foo@bar.com')
+  end
+
+  it "should ensure passwords, and password confirmations are not blank" do
+    user.update_attributes(password: '  ', password_confirmation: '  ')
+    expect(user).not_to be_valid
+  end
+
+  it "should ensure that password and password confirmation match" do
+    user.update_attributes(password: 'password1', password_confirmation: 'password2')
+    expect(user).not_to be_valid
+  end
+
+  it "should ensure passwords have a minimum length of 6 characters" do
+    user.update_attribute(:password, 'a' * 5)
+    expect(user).not_to be_valid
   end
 
 end
