@@ -47,9 +47,8 @@ RSpec.describe User, type: :model do
   end
 
   it "should ensure that email addresses are unique" do
-    User.create(name: 'user2', email: 'user2@example.com')
-    user.update_attribute(:email, 'user2@example.com'.upcase)
-    expect(user).not_to be_valid
+    user2 = User.create(name: 'user2', email: 'user@example.com')
+    expect(user2).not_to be_valid
   end
 
 end
