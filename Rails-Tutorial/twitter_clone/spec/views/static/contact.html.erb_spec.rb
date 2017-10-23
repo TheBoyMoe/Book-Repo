@@ -8,9 +8,12 @@ RSpec.describe "static/contact.html.erb", type: :view do
       visit '/contact'
     end
 
-    it "has a title tag with the text 'Contact | Twitter Clone App' and a page heading" do
-      expect(page.body).to include("<title>Contact | #{@base_title}</title>")
-      find('h1', text: 'Contact Page')
+    it "has a title with the text 'Contact | Twitter Clone App'" do
+      expect(page.body).to have_title("Contact | #{@base_title}")
+    end
+
+    it "has the content 'Contact Page'" do
+      expect(page.body).to have_content('Contact Page')
     end
   end
 
