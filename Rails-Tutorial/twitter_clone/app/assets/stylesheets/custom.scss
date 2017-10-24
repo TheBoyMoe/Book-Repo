@@ -9,6 +9,12 @@ $grey: #555;
 $grey-dark: #222;
 $white: #fff;
 
+// mixins
+@mixin box_sizing {
+  -moz-box-sizing:    border-box;
+  -webkit-box-sizing: border-box;
+  box-sizing:         border-box;
+}
 
 /* universal */
 
@@ -35,7 +41,7 @@ textarea {
 }
 
 
-img {display: none;}
+// img {display: none;}
 
 /* header */
 
@@ -117,4 +123,15 @@ h2 {
 p {
   font-size: 1.1em;
   line-height: 1.7em;
+}
+
+
+/* miscellaneous */
+
+.debug_dump {
+  clear: both;
+  float: left;
+  width: 100%;
+  margin-top: 45px;
+  @include box_sizing;
 }
