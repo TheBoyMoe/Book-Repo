@@ -5,7 +5,7 @@ RSpec.describe StaticController, type: :controller do
   describe "GET #home" do
     before(:example) {get :home}
     render_views
-
+  
     it "returns http success" do
       expect(response).to have_http_status(:success)
     end
