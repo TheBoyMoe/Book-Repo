@@ -6,15 +6,31 @@
     <%= render 'layouts/shim'%>
   </head>
   <body id="<%= yield(:title).downcase %>">
+
+    <!-- site header -->
     <%= render 'layouts/header' %>
+
+    <!-- site content -->
     <div class="container">
+      <!-- flash message -->
+      <% flash.each do |message_type, message| %>
+        <div class="alert alert-<%= message_type %>">
+          <%= message %>
+        </div>
+      <% end %>
+
       <%= yield %>
     </div>
+
+    <!-- site footer -->
     <%= render 'layouts/footer' %>
+
+    <!-- debugging -->
     <% if Rails.env.development? %>
       <div class="container">
         <%= debug(params) %>
       </div>
     <% end %>
+
   </body>
 </html>
