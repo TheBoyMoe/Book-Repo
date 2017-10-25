@@ -111,6 +111,16 @@ RSpec.describe "users/new.html.erb", type: :view do
         expect(page.body).to include("Password is too short")
       end
 
+      it "displays the error message 'email has already been taken' if the user has been registered with the same email" do
+        User.create(name: 'test', email: 'test@example.com', password: 'password', password_confirmation: 'password')
+        fill_in 'user_name', with: 'test'
+        fill_in 'user_email', with: 'test@example.com'
+        fill_in 'user_password', with: 'pass'
+        fill_in 'user_password_confirmation', with: 'pass'
+        click_button 'Create my account'
+
+        expect(page.body).to include("Email has already been taken")
+      end
 
     end
 
