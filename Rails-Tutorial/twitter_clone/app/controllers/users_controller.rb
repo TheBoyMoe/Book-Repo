@@ -11,10 +11,10 @@ class UsersController < ApplicationController
   def create
     # passing the params[:user] hash to User.new() is a risk, prevented by default in rails
     # @user = User.new(params[:user])
-    debugger
+
     @user = User.new(user_params)
     if @user.save
-
+      # TODO: 
     else
       render 'new'
     end

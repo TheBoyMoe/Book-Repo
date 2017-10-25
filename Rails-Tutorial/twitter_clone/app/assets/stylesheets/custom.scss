@@ -111,6 +111,28 @@ input {
   height: auto !important;
 }
 
+form.new_user {
+  #error_explanation {
+    border: none;
+    background: $white;
+    width: auto;
+    color: red;
+    ul {
+      color: red;
+      margin: 0 0 30px 0;
+    }
+  }
+
+  .field_with_errors {
+    @extend .has-error;
+    .form-control {
+      color: $state-danger-text;
+    }
+    background: $white;
+    display: block;
+  }
+}
+
 
 /* footer */
 
