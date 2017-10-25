@@ -11,8 +11,8 @@ RSpec.describe "users/new.html.erb", type: :view do
       expect(page).to have_title(full_title('Signup'))
     end
 
-    it "has a signup form to allow user to enter their details" do
-      expect(page).to have_selector('form')
+    it "has a signup form that posts user submitted data to '/signup'" do
+      expect(page).to have_selector('form[action="/signup"]')
       expect(page).to have_field('user_name')
       expect(page).to have_field('user_email')
       expect(page).to have_field('user_password')
@@ -90,7 +90,7 @@ RSpec.describe "users/new.html.erb", type: :view do
 
         expect(page.body).to include("Password confirmation doesn&#39;t match Password")
       end
-      
+
       it "displays the error message 'Password confirmation doesn't match Password' if password and confirmation fields do not match" do
         fill_in 'user_name', with: 'test'
         fill_in 'user_email', with: 'test@example.com'

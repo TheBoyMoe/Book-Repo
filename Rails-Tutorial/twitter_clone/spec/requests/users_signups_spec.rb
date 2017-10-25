@@ -15,7 +15,7 @@ RSpec.describe "UsersSignups", type: :request do
     context "form submission", type: :feature do
 
       it "increments the User count by 1 on successful user submission" do
-        post users_path, params: {
+        post signup_path, params: {
           user: {
             name: 'test',
             email: 'user@example.com',
@@ -28,7 +28,7 @@ RSpec.describe "UsersSignups", type: :request do
       end
 
       it "does not change the User count if submission fails" do
-        post users_path, params: {
+        post signup_path, params: {
           user: {
             name: '  ',
             email: 'user@example.com',
