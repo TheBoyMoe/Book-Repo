@@ -28,14 +28,15 @@ RSpec.describe "users/new.html.erb", type: :view do
     }
 
     context "with valid information" do
-      xit "redirects the user to their profiel page upon successful signup" do
+      it "redirects the user to their profiel page upon successful signup" do
         fill_in 'user_name', with: 'test'
         fill_in 'user_email', with: 'test@example.com'
         fill_in 'user_password', with: 'password'
         fill_in 'user_password_confirmation', with: 'password'
         click_button 'Create my account'
 
-        # TODO:
+        expect(page.status_code).to eq(200)
+        expect(page.body).to include('test')
       end
     end
 

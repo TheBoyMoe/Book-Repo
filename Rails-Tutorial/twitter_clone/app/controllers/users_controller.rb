@@ -14,7 +14,8 @@ class UsersController < ApplicationController
 
     @user = User.new(user_params)
     if @user.save
-      # TODO: redirect user to profile page
+      # you can use users_url, users_path or simply @user
+      redirect_to user_path(@user)
     else
       render 'new'
     end
