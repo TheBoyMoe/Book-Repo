@@ -12,7 +12,7 @@ RSpec.describe "UsersSignups", type: :request do
       expect(response).to have_http_status(200)
     end
 
-    context "form submission", type: :feature do
+    context "form submission" do
 
       it "increments the User count by 1 on successful user submission" do
         post signup_path, params: {
