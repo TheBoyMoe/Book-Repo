@@ -37,7 +37,7 @@ RSpec.describe "users/new.html.erb", type: :view do
 
         expect(page.status_code).to eq(200)
         expect(page.current_path).to eq('/users/1')
-        expect(page.body).to include("Welcome to the Sample App!")
+        expect(page.body).to have_selector('div.alert.alert-success', text: "Welcome")
       end
     end
 
@@ -51,6 +51,7 @@ RSpec.describe "users/new.html.erb", type: :view do
         click_button 'Create my account'
 
         expect(page.current_path).to eq('/signup')
+        expect(page.body).to have_selector('div.alert.alert-danger', text: "error")
         expect(page.body).to include("Name can&#39;t be blank")
       end
 
@@ -62,6 +63,7 @@ RSpec.describe "users/new.html.erb", type: :view do
         click_button 'Create my account'
 
         expect(page.current_path).to eq('/signup')
+        expect(page.body).to have_selector('div.alert.alert-danger', text: "error")
         expect(page.body).to include("Email can&#39;t be blank")
       end
 
@@ -73,6 +75,7 @@ RSpec.describe "users/new.html.erb", type: :view do
         click_button 'Create my account'
 
         expect(page.current_path).to eq('/signup')
+        expect(page.body).to have_selector('div.alert.alert-danger', text: "error")
         expect(page.body).to include("Email is invalid")
       end
 
@@ -84,6 +87,7 @@ RSpec.describe "users/new.html.erb", type: :view do
         click_button 'Create my account'
 
         expect(page.current_path).to eq('/signup')
+        expect(page.body).to have_selector('div.alert.alert-danger', text: "error")
         expect(page.body).to include("Password can&#39;t be blank")
       end
 
@@ -94,6 +98,8 @@ RSpec.describe "users/new.html.erb", type: :view do
         fill_in 'user_password_confirmation', with: '  '
         click_button 'Create my account'
 
+        expect(page.current_path).to eq('/signup')
+        expect(page.body).to have_selector('div.alert.alert-danger', text: "error")
         expect(page.body).to include("Password confirmation doesn&#39;t match Password")
       end
 
@@ -105,6 +111,7 @@ RSpec.describe "users/new.html.erb", type: :view do
         click_button 'Create my account'
 
         expect(page.current_path).to eq('/signup')
+        expect(page.body).to have_selector('div.alert.alert-danger', text: "error")
         expect(page.body).to include("Password confirmation doesn&#39;t match Password")
       end
 
@@ -116,6 +123,7 @@ RSpec.describe "users/new.html.erb", type: :view do
         click_button 'Create my account'
 
         expect(page.current_path).to eq('/signup')
+        expect(page.body).to have_selector('div.alert.alert-danger', text: "error")
         expect(page.body).to include("Password is too short")
       end
 
@@ -128,6 +136,7 @@ RSpec.describe "users/new.html.erb", type: :view do
         click_button 'Create my account'
 
         expect(page.current_path).to eq('/signup')
+        expect(page.body).to have_selector('div.alert.alert-danger', text: "error")
         expect(page.body).to include("Email has already been taken")
       end
 
