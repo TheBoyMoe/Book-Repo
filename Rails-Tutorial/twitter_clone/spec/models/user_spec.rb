@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 RSpec.describe User, type: :model do
-  let!(:user) {User.create(name: 'user', email: 'user@example.com', password: 'password', password_confirmation: 'password')}
+  let!(:user) {User.new(name: 'user', email: 'user@example.com', password: 'password', password_confirmation: 'password')}
 
   it "is a valid user" do
     expect(user).to be_valid
@@ -74,6 +74,14 @@ RSpec.describe User, type: :model do
   it "should ensure passwords have a minimum length of 6 characters" do
     user.update_attribute(:password, 'a' * 5)
     expect(user).not_to be_valid
+  end
+
+  describe "remember_token" do
+    before {user.save}
+
+    it "ensure that a token is created on saving user" do
+      expect(user.remember_token).not_to be_blank
+    end
   end
 
 end
