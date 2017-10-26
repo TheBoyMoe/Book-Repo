@@ -10,6 +10,8 @@ RSpec.describe User, type: :model do
     expect(user).to respond_to(:password_digest)
     expect(user).to respond_to(:password)
     expect(user).to respond_to(:password_confirmation)
+    expect(user).to respond_to(:remember_token)
+    expect(user).to respond_to(:authenticate)
   end
 
   it "should have a value for the name attribute" do
