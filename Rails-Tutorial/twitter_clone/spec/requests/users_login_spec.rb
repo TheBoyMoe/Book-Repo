@@ -53,6 +53,25 @@ RSpec.describe "UsersLogin", type: :request do
         expect(page.body).to have_selector('li', text: 'Log out')
         expect(page.body).not_to have_selector('li', text: 'Log in')
       end
+
+      context "user logout" do
+        it "redirects to user to the site 'root'" do
+          click_link 'Log out'
+
+          expect(page.status_code).to eq(200)
+          expect(page.current_path).to eq("/")
+          expect(page.body).to include('Welcome to the Sample App')
+        end
+
+        it "displays the 'Login link', 'Log out' and 'Profile' removed" do
+          click_link 'Log out'
+
+          expect(page.body).to have_selector('li', text: 'Log in')
+          expect(page.body).not_to have_selector('li', text: 'Profile')
+          expect(page.body).not_to have_selector('li', text: 'Log out')
+        end
+
+      end
     end
 
 
