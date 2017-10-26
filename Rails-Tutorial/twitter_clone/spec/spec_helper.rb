@@ -99,3 +99,7 @@ RSpec.configure do |config|
   Kernel.srand config.seed
 =end
 end
+
+def is_logged_in?
+  !session[:user_id].nil?
+end

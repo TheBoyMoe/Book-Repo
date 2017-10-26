@@ -14,6 +14,7 @@ class UsersController < ApplicationController
 
     @user = User.new(user_params)
     if @user.save
+      log_in(@user)
       # displayed on the first page after redirect
       flash[:success] = "Welcome to the Sample App!"
       # you can use users_url, users_path or simply @user
