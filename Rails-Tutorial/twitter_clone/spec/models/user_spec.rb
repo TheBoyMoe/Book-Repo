@@ -76,11 +76,10 @@ RSpec.describe User, type: :model do
     expect(user).not_to be_valid
   end
 
-  xdescribe "remember_token" do
-    before {user.save}
+  describe "authenticated?" do
 
-    it "ensure that a token is created on saving user" do
-      expect(user.remember_token).not_to be_blank
+    it "returns false for a user with a nil digest" do
+      expect(user.authenticated?('')).to eq(false)
     end
   end
 
