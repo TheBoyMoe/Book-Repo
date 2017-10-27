@@ -1,4 +1,6 @@
 class User < ApplicationRecord
+  attr_reader :remember_token
+
   before_save {self.email = email.downcase}
   # callback method executed before saving the user
   # before_create :create_remember_token
@@ -10,21 +12,22 @@ class User < ApplicationRecord
 
   has_secure_password
 
+  # returns the hash digest of a random string
   def self.digest(string)
     cost = ActiveModel::SecurePassword.min_cost ? BCrypt::Engine::MIN_COST : BCrypt::Engine.cost
     BCrypt::Password.create(string, cost: cost)
   end
 
-  # def self.new_remember_token
-  #   SecureRandom.urlsafe_base64
-  # end
-  #
-  # def self.digest(token)
-  #   Digest::SHA1.hexdigest(token.to_s)
-  # end
-  #
-  # private
-  #   def create_remember_token
-  #     self.remember_token = User.digest(User.new_remember_token)
-  #   end
+  # returns a random string token
+  def self.new_token
+    SecureRandom.urlsafe_base64
+  end
+
+  # store a hashed version of the token in the database for use in persistent sessions
+  def remember
+    self.remember_token = User.new_token
+    update_attribute(:remember_token, User.digest(self.remember_token))
+  end
+
+
 end
