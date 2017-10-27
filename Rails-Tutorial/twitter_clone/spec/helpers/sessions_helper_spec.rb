@@ -11,5 +11,23 @@ require 'rails_helper'
 #   end
 # end
 RSpec.describe SessionsHelper, type: :helper do
-  pending "add some examples to (or delete) #{__FILE__}"
+
+  # REVIEW: section 9.3.2 - testing remeber branch
+  context "#current_user", type: :feature do
+
+    before(:each){
+      @user = User.create(name: 'Andrew', email: 'andrew@example.com', password: 'password', password_confirmation: 'password')
+      visit login_path
+      fill_in 'session_email', with: 'andrew@example.com'
+      fill_in 'session_password', with: 'password'
+      click_button 'Log in'
+    }
+
+    it "it returns the 'current_user' when the session is nil"
+
+
+    it "it returns nil when the 'remember_digest' is nil"
+
+  end
+
 end

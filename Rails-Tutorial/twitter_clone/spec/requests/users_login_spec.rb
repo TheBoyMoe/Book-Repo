@@ -74,6 +74,38 @@ RSpec.describe "UsersLogin", type: :request do
       end
     end
 
+    # REVIEW: section 9.3.1 testing 'remember me' check box
+    context "persisting user session", type: :feature do
+      before(:each){
+        User.create(name: 'Andrew', email: 'andrew@example.com', password: 'password', password_confirmation: 'password')
+        fill_in 'session_email', with: 'andrew@example.com'
+        fill_in 'session_password', with: 'password'
+      }
 
+      it "saves a token to a persistent cookie when the 'remember_me' checkbox is selected" do
+        # find(:css, '#session_remember_me').set(true)
+        check('session_remember_me')
+        click_button 'Log in'
+        binding.pry
+        expect(cookies['remember_token']).not_to be nil
+      end
+
+      it "does not save a token to a persistent cookie if the 'remember_me' checkbox is not selected" do
+        uncheck('session_remember_me')
+        click_button 'Log in'
+
+        expect(cookies['remember_token']).to be nil
+      end
+
+      it "deletes the cookie when the user logs out" do
+        check('session_remember_me')
+        click_button 'Log in'
+        click_link 'Log out'
+
+        expect(cookies['remember_token']).to be nil
+        # expect(cookies).to be_empty
+      end
+
+    end
   end
 end
