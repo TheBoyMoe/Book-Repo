@@ -8,8 +8,8 @@ class SessionsController < ApplicationController
     user = User.find_by(email: params[:session][:email].downcase)
     if user && user.authenticate(params[:session][:password])
       # log the user in & redirect to user's show page
-      # sign_in user
-      log_in(user)
+      log_in(user) # sign_in user
+      remember(user) # create a persistent session
       redirect_to user_path(user) # => '/users/:id'
     else
       # return an error - use 'flash.now' for rendered views - contents disappear as soon as there's an additional request.

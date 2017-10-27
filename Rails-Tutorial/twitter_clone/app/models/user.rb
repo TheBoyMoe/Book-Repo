@@ -1,5 +1,5 @@
 class User < ApplicationRecord
-  attr_reader :remember_token
+  attr_accessor :remember_token
 
   before_save {self.email = email.downcase}
   # callback method executed before saving the user
@@ -26,8 +26,12 @@ class User < ApplicationRecord
   # store a hashed version of the token in the database for use in persistent sessions
   def remember
     self.remember_token = User.new_token
-    update_attribute(:remember_token, User.digest(self.remember_token))
+    update_attribute(:remember_digest, User.digest(self.remember_token))
   end
 
+  # does the token match
+  def authenticated?(remember_token)
+    BCrypt::Password.new(remember_digest).is_password?(remember_token)
+  end
 
 end
