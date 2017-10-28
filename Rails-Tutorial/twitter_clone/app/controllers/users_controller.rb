@@ -1,10 +1,12 @@
 class UsersController < ApplicationController
+
   def new
-    # user object passed to the #form_for helper
+    # renders the #form_for helper
     @user = User.new
   end
 
   def show
+    # renders the user profile
     @user = User.find(params[:id])
   end
 
@@ -22,6 +24,23 @@ class UsersController < ApplicationController
     else
       render 'new'
     end
+
+  end
+
+  def index
+
+  end
+
+  def edit
+    # find the user in the database, render the user profile for editing
+    @user = User.find_by(id: params[:id])
+  end
+
+  def update
+
+  end
+
+  def destroy
 
   end
 

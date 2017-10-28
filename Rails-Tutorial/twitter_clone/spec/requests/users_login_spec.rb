@@ -75,7 +75,7 @@ RSpec.describe "UsersLogin", type: :request do
     end
 
     # REVIEW: section 9.3.1 testing 'remember me' check box
-    context "persisting user session", type: :feature do
+    xcontext "persisting user session", type: :feature do
       before(:each){
         User.create(name: 'Andrew', email: 'andrew@example.com', password: 'password', password_confirmation: 'password')
         fill_in 'session_email', with: 'andrew@example.com'
