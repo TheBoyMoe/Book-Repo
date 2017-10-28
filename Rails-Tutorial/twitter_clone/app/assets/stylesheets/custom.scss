@@ -100,6 +100,10 @@ aside {
 
 /* forms */
 
+#login h1 {
+  clear: both;
+}
+
 input, textarea, select, .uneditable-input {
   border: 1px solid #bbb;
   width: 100%;
@@ -111,7 +115,8 @@ input {
   height: auto !important;
 }
 
-form.new_user {
+form {
+  
   #error_explanation {
     border: none;
     background: $white;

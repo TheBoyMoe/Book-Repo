@@ -37,7 +37,12 @@ class UsersController < ApplicationController
   end
 
   def update
-
+    @user = User.find_by(id: params[:id])
+    if @user.update_attributes(user_params)
+      # TODO:
+    else
+      render 'edit'
+    end
   end
 
   def destroy
@@ -47,6 +52,7 @@ class UsersController < ApplicationController
   private
     def user_params
       # params must have a 'user' hash, with only the following atttributes
+      # to is to prevent mass assignment vulnerability
       params.require(:user).permit(:name, :email, :password, :password_confirmation)
     end
 
