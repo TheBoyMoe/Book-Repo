@@ -1,7 +1,7 @@
 <header class="navbar navbar-fixed-top navbar-inverse">
   <div class="container">
-    <%= link_to "sample app", root_path, id: "logo" %>
     <nav>
+      <%= link_to "sample app", root_path, class: "navbar-brand" %>
       <ul class="nav navbar-nav navbar-right">
         <li><%= link_to "Home",   root_path, {class: 'nav-link'} %></li>
         <li><%= link_to "Help",   help_path, {class: 'nav-link'} %></li>
@@ -23,7 +23,6 @@
         <% else %>
           <li><%= link_to "Log in", login_path, {class: 'nav-link'} %></li>
         <% end %>
-
       </ul>
     </nav>
   </div>

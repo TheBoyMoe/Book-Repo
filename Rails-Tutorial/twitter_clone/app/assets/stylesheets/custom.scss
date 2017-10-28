@@ -40,26 +40,23 @@ textarea {
   }
 }
 
-
-// img {display: none;}
-
 /* header */
 
-#logo {
-  float: left;
-  margin-right: 10px;
-  font-size: 1.7em;
-  color: $white;
+.navbar-brand {
+  // margin-right: 10px;
+  font-size: 1.4em;
+  // color: $white;
   text-transform: uppercase;
-  letter-spacing: -1px;
-  padding-top: 9px;
-  font-weight: bold;
+  // letter-spacing: -1px;
+  // padding-top: 9px;
+  // font-weight: bold;
 
   &:hover {
     color: $white;
     text-decoration: none;
   }
 }
+
 
 /* sidebar */
 
@@ -116,7 +113,7 @@ input {
 }
 
 form {
-  
+
   #error_explanation {
     border: none;
     background: $white;
