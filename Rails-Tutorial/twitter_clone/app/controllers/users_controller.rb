@@ -1,5 +1,9 @@
 class UsersController < ApplicationController
 
+  # `before filter` - ensure that users are logged in before they can
+  # execute the following actions, by default before_filter applies to every action
+  before_action :logged_in_user, only: [:edit, :update]
+
   def new
     # renders the #form_for helper
     @user = User.new
@@ -57,5 +61,11 @@ class UsersController < ApplicationController
       params.require(:user).permit(:name, :email, :password, :password_confirmation)
     end
 
+    def logged_in_user
+      unless logged_in?
+        flash[:danger] = 'Please log in'
+        redirect_to login_url
+      end
+    end
 
 end
