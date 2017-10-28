@@ -34,7 +34,25 @@ RSpec.describe "UsersEdits", type: :request do
     end
 
 
-    context "with valid information"
+    context "with valid information" do
+      before {
+        fill_in 'user_name', with: 'Andrew Smith'
+        fill_in 'user_email', with: 'andrew.smith@example.com'
+        click_button 'Save changes'
+      }
+
+      it "redirects the user to their profile page, displaying a success message" do
+        expect(page.status_code).to eq(200)
+        expect(page.current_path).to eq("/users/#{user.id}")
+        expect(page.body).to have_selector('div.alert.alert-success', text: 'Profile updated')
+      end
+
+      it "updates the users databse entry" do
+        expect(User.find_by(id: user.id).name).to eq('Andrew Smith')
+        expect(User.find_by(id: user.id).email).to eq('andrew.smith@example.com')
+      end
+
+    end
 
 
 
