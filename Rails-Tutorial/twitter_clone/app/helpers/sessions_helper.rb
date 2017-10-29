@@ -25,6 +25,11 @@ module SessionsHelper
     end
   end
 
+  # returns true if the given user is the current user
+  def current_user?(user)
+    user == current_user
+  end
+
   # a user is logged if there is a current user in the session
   def logged_in?
     !current_user.nil?

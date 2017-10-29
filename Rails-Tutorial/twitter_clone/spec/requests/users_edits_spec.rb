@@ -84,5 +84,34 @@ RSpec.describe "UsersEdits", type: :request do
 
     end
 
+
+    context "when a user tries to edit another users profile" do
+
+      before(:each) {
+        @thomas = User.create(name: 'Thomas', email: 'thomas@example.com', password: 'password', password_confirmation: 'password')
+        @andrew = User.create(name: 'Andrew', email: 'andrew@example.com', password: 'password', password_confirmation: 'password')
+        visit login_path
+        fill_in 'session_email', with: 'andrew@example.com'
+        fill_in 'session_password', with: 'password'
+        click_button 'Log in'
+      }
+
+      it "redirects edit to the 'root'" do
+        visit edit_user_path(@thomas)
+
+        expect(page.current_path).to eq(root_path)
+        expect(page.body).to have_selector('div.alert.alert-danger', text: 'You are not authorised to view that page')
+      end
+
+
+      it "redirects update to the 'root'" do
+        page.driver.submit :patch, user_path(@thomas), { user: { name: @thomas.name, email: @thomas.email } }
+
+        expect(page.current_path).to eq(root_path)
+        expect(page.body).to have_selector('div.alert.alert-danger', text: 'You are not authorised to view that page')
+      end
+
+    end
+
   end
 end

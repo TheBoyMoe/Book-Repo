@@ -4,6 +4,9 @@ class UsersController < ApplicationController
   # execute the following actions, by default before_filter applies to every action
   before_action :logged_in_user, only: [:edit, :update]
 
+  # ensure that the current user can only edit/update their own profile
+  before_action :correct_user, only: [:edit, :update]
+
   def new
     # renders the #form_for helper
     @user = User.new
@@ -66,6 +69,16 @@ class UsersController < ApplicationController
         flash[:danger] = 'Please log in'
         redirect_to login_url
       end
+    end
+
+    def correct_user
+      user = User.find_by(id: params[:id])
+      if !current_user?(user)
+        flash[:danger] = 'You are not authorised to view that page'
+        redirect_to root_path
+        return false
+      end
+      return true
     end
 
 end
