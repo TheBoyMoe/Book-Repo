@@ -9,17 +9,18 @@ class UsersController < ApplicationController
 
 
   def index
-    
-  end
-
-  def new
-    # renders the #form_for helper
-    @user = User.new
+    # show all users
+    @users = User.all
   end
 
   def show
     # renders the user profile
     @user = User.find(params[:id])
+  end
+
+  def new
+    # renders the #form_for helper
+    @user = User.new
   end
 
   def create
