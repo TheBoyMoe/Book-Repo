@@ -11,7 +11,8 @@ class SessionsController < ApplicationController
       log_in(user) # sign_in user
       # remember(user) # create a persistent session
       params[:session][:remember_me] == '1' ? remember(user) : forget(user)
-      redirect_to user_path(user) # => '/users/:id'
+      # redirect_to user_path(user) # => '/users/:id'
+      redirect_back_or(user) # => '/users/:id/edit' or '/user/:id' - default
     else
       # return an error - use 'flash.now' for rendered views - contents disappear as soon as there's an additional request.
       flash.now[:danger] = "Invalid email/password combination"
