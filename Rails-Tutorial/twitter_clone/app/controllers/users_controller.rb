@@ -9,8 +9,8 @@ class UsersController < ApplicationController
 
 
   def index
-    # show all users
-    @users = User.all
+    # return users a page ata time, 30 records by default
+    @users = User.paginate(page: params[:page])
   end
 
   def show
