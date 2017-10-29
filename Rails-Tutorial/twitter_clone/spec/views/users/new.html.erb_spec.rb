@@ -34,9 +34,10 @@ RSpec.describe "users/new.html.erb", type: :view do
         fill_in 'user_password', with: 'password'
         fill_in 'user_password_confirmation', with: 'password'
         click_button 'Create my account'
+        user = User.find_by(email: 'test@example.com')
 
         expect(page.status_code).to eq(200)
-        expect(page.current_path).to eq('/users/1')
+        expect(page.current_path).to eq("/users/#{user.id}")
         expect(page.body).to have_selector('div.alert.alert-success', text: "Welcome")
       end
     end

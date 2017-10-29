@@ -2,6 +2,7 @@ require 'rails_helper'
 
 RSpec.describe "UsersIndex", type: :request do
 
+  # REVIEW: - clear the test database after tests
   fixtures :all
 
   describe "GET /users", type: :feature do
