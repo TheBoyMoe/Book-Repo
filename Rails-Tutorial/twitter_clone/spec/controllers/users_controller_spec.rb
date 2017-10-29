@@ -16,7 +16,7 @@ RSpec.describe UsersController, type: :controller do
     end
 
     context "user not logged in", type: :feature do
-      it "should redirect the user to the 'Login' page" do
+      it "redirect the user to the 'Login' page" do
         visit users_path
 
         expect(page.current_path).to eq('/login')
@@ -39,7 +39,9 @@ RSpec.describe UsersController, type: :controller do
         expect(page.body).to have_selector('a', text: 'Thomas Jones')
         expect(page.body).to have_selector('a', text: 'Andrew Jones')
       end
+
     end
+
   end
 
 end

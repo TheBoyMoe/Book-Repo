@@ -12,6 +12,7 @@ RSpec.describe User, type: :model do
     expect(user).to respond_to(:password_confirmation)
     expect(user).to respond_to(:remember_token)
     expect(user).to respond_to(:authenticate)
+    expect(user).to respond_to(:admin)
   end
 
   it "should have a value for the name attribute" do
@@ -80,6 +81,28 @@ RSpec.describe User, type: :model do
 
     it "returns false for a user with a nil digest" do
       expect(user.authenticated?('')).to eq(false)
+    end
+  end
+
+  context "admin attribute", type: :feature do
+
+    let(:user) {User.create(name: 'test', email: 'test@ex.com', password: 'password')}
+
+    before(:each) {
+      visit login_path
+      fill_in 'session_email', with: "test@ex.com"
+      fill_in 'session_password', with: "password"
+      click_button 'Log in'
+    }
+
+    it "users by default are not administrators" do
+      expect(user.admin?).to eq(false)
+    end
+
+    it "prevents the admin attribute being edited via the web" do
+      page.driver.submit :patch, user_path(user), { user: {password: 'password', password_confirmation: 'password', admin: true } }
+
+      expect(user.admin?).to eq(false)
     end
   end
 
