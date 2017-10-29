@@ -82,16 +82,35 @@ RSpec.describe "UsersEdits", type: :request do
         expect(page.body).to have_selector('div.alert.alert-danger', text: "Please log in")
       end
 
-      it "forwards the user to their settings page if they login" do
-        visit edit_user_path(@user)
-        redirect_to(login_path)
-        fill_in 'session_email', with: 'andrew@example.com'
-        fill_in 'session_password', with: 'password'
-        click_button 'Log in'
+      context "friendly forwarding" do
 
-        expect(page.current_path).to eq("/users/#{@user.id}/edit")
-        expect(page.body).to have_selector('input[value="Andrew"]')
-        expect(page.body).to have_selector('input[value="andrew@example.com"]')
+        it "forwards the user to their settings page if they login" do
+          visit edit_user_path(@user)
+          redirect_to(login_path)
+          fill_in 'session_email', with: 'andrew@example.com'
+          fill_in 'session_password', with: 'password'
+          click_button 'Log in'
+
+          expect(page.current_path).to eq("/users/#{@user.id}/edit")
+          expect(page.body).to have_selector('input[value="Andrew"]')
+          expect(page.body).to have_selector('input[value="andrew@example.com"]')
+        end
+
+        it "on subsequent logins, redirects the user to their profile page" do
+          visit edit_user_path(@user)
+          redirect_to(login_path)
+          fill_in 'session_email', with: 'andrew@example.com'
+          fill_in 'session_password', with: 'password'
+          click_button 'Log in'
+          click_link 'Log out'
+          click_link 'Log in'
+          fill_in 'session_email', with: 'andrew@example.com'
+          fill_in 'session_password', with: 'password'
+          click_button 'Log in'
+          
+          expect(page.current_path).to eq("/users/#{@user.id}")
+        end
+
       end
 
     end
