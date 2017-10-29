@@ -2,10 +2,15 @@ class UsersController < ApplicationController
 
   # `before filter` - ensure that users are logged in before they can
   # execute the following actions, by default before_filter applies to every action
-  before_action :logged_in_user, only: [:edit, :update]
+  before_action :logged_in_user, only: [:index, :edit, :update]
 
   # ensure that the current user can only edit/update their own profile
   before_action :correct_user, only: [:edit, :update]
+
+
+  def index
+    
+  end
 
   def new
     # renders the #form_for helper
@@ -31,10 +36,6 @@ class UsersController < ApplicationController
     else
       render 'new'
     end
-
-  end
-
-  def index
 
   end
 
