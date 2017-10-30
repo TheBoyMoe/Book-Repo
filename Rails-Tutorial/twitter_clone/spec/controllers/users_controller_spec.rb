@@ -44,4 +44,63 @@ RSpec.describe UsersController, type: :controller do
 
   end
 
+
+  describe "#destroy", type: :feature do
+    fixtures :all
+
+    before(:each) {
+      @admin = users(:michael)
+      @user = users(:archer)
+      @count = User.count
+    }
+
+    context "not logged in" do
+      it "redirects users to the login page" do
+        page.driver.submit :delete, user_path(@user), { user: { name: @user.name, email: @user.email } }
+
+        expect(User.count).to eq(@count)
+        expect(page.current_path).to eq('/login')
+        expect(page.body).to have_selector('div.alert.alert-danger', text: "Please log in")
+      end
+
+    end
+
+    context "logged in" do
+      it "redirects users who are not admins to the 'root' page" do
+        visit login_path
+        fill_in 'session_email', with: "#{@user.email}"
+        fill_in 'session_password', with: "password"
+        click_button 'Log in'
+        page.driver.submit :delete, user_path(@admin), { user: { name: @admin.name, email: @admin.email } }
+
+        expect(User.count).to eq(@count)
+        expect(page.current_path).to eq(root_path)
+      end
+
+      context 'as admin' do
+        before(:each){
+          visit login_path
+          fill_in 'session_email', with: "#{@admin.email}"
+          fill_in 'session_password', with: "password"
+          click_button 'Log in'
+        }
+        render_views
+
+        it "deletes the the record" do
+          page.driver.submit :delete, user_path(@user), { user: { name: @user.name, email: @user.email } }
+
+          expect(User.count).to eq(@count - 1)
+        end
+
+        it "deletes the record by clicking on a delete link" do
+          click_link 'Users'
+          find("a[href='/users/#{@user.id}']", text: 'delete').click
+
+          expect(User.count).to eq(@count - 1)
+        end
+      end
+
+
+    end
+  end
 end

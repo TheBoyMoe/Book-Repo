@@ -1,4 +1,9 @@
 <li>
   <%= gravatar_for user, size: 60 %>
   <%= link_to user.name, user %>
+  <!-- display the delete link only to admins. this particular tech uses js. if js is disabled in the browser, use a form element with a post request, which works without js -->
+  <% if current_user.admin? && !current_user?(user) %>
+    | <%= link_to "delete", user, method: :delete, data: { confirm: "You sure?" } %>
+  <% end %>
+
 </li>

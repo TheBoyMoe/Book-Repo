@@ -2,10 +2,13 @@ class UsersController < ApplicationController
 
   # `before filter` - ensure that users are logged in before they can
   # execute the following actions, by default before_filter applies to every action
-  before_action :logged_in_user, only: [:index, :edit, :update]
+  before_action :logged_in_user, only: [:index, :edit, :update, :destroy]
 
   # ensure that the current user can only edit/update their own profile
   before_action :correct_user, only: [:edit, :update]
+
+  # ensure that only admins can delete users
+  before_action :admin_user, only: :destroy
 
 
   def index
@@ -56,7 +59,9 @@ class UsersController < ApplicationController
   end
 
   def destroy
-
+    User.find_by(id: params[:id]).destroy
+    flash[:success] = 'User deleted'
+    redirect_to users_path
   end
 
   private
@@ -82,6 +87,10 @@ class UsersController < ApplicationController
         return false
       end
       return true
+    end
+
+    def admin_user
+      redirect_to(root_path) unless current_user.admin?
     end
 
 end

@@ -107,7 +107,7 @@ RSpec.describe "UsersEdits", type: :request do
           fill_in 'session_email', with: 'andrew@example.com'
           fill_in 'session_password', with: 'password'
           click_button 'Log in'
-          
+
           expect(page.current_path).to eq("/users/#{@user.id}")
         end
 
