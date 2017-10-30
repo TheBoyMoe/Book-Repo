@@ -1,9 +1,12 @@
 class User < ApplicationRecord
-  attr_accessor :remember_token
+  attr_accessor :remember_token, :activation_token
 
-  before_save {self.email = email.downcase}
-  # callback method executed before saving the user
-  # before_create :create_remember_token
+  # callback method executed before saving the user(both creation and update)
+  before_save :downcase_email
+
+  # execute the method before creating the user
+  before_create :create_activation_digest
+
 
   validates :name, presence: true, length: {maximum: 60}
   VALID_EMAIL_REGEX = /\A[\w+\-.]+@[a-z\d\-]+(\.[a-z\d\-]+)*\.[a-z]+\z/i
@@ -39,5 +42,17 @@ class User < ApplicationRecord
   def forget
     update_attribute(:remember_digest, nil)
   end
+
+  private
+    def create_activation_digest
+      # set activation_token and _digest on each new user, _digest will be saved to the database when the user is saved
+      self.activation_token  = User.new_token
+      self.activation_digest = User.digest(activation_token)
+    end
+
+    def downcase_email
+      # self.email = email.downcase
+      email.downcase!
+    end
 
 end
