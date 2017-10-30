@@ -27,18 +27,18 @@ RSpec.describe "users/new.html.erb", type: :view do
       visit signup_path
     }
 
+
     context "with valid information" do
-      it "redirects the user to their profile displaying a welcome message" do
+      it "redirects the user to the 'root', displaying a message letting users know they need to activate their account first" do
         fill_in 'user_name', with: 'test'
         fill_in 'user_email', with: 'test@example.com'
         fill_in 'user_password', with: 'password'
         fill_in 'user_password_confirmation', with: 'password'
         click_button 'Create my account'
-        user = User.find_by(email: 'test@example.com')
 
         expect(page.status_code).to eq(200)
-        expect(page.current_path).to eq("/users/#{user.id}")
-        expect(page.body).to have_selector('div.alert.alert-success', text: "Welcome")
+        expect(page.current_path).to eq("/")
+        expect(page.body).to have_selector('div.alert.alert-success', text: "Please check your email to activate your account.")
       end
     end
 

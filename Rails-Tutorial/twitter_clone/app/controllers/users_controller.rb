@@ -32,11 +32,12 @@ class UsersController < ApplicationController
 
     @user = User.new(user_params)
     if @user.save
-      log_in(@user)
+      # log_in(@user)
+      UserMailer.account_activation(@user).deliver_now
       # displayed on the first page after redirect
-      flash[:success] = "Welcome to the Sample App!"
+      flash[:success] = "Please check your email to activate your account."
       # you can use users_url, users_path or simply @user
-      redirect_to user_path(@user)
+      redirect_to root_path
     else
       render 'new'
     end

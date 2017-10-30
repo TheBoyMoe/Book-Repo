@@ -30,7 +30,8 @@ RSpec.describe "UsersSignups", type: :request do
           expect(User.count).to eq(1)
         end
 
-        it "logs the user in" do
+        # REVIEW: user nolonger signed in due to adding email activation feature
+        xit "logs the user in" do
           expect(is_logged_in?).to be true
         end
 
