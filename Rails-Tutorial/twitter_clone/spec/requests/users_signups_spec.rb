@@ -4,6 +4,7 @@ RSpec.describe "UsersSignups", type: :request do
   describe "GET /users_signups" do
 
     before(:each) {
+      ActionMailer::Base.deliveries.clear
       User.destroy_all
       get signup_path
     }
@@ -12,34 +13,43 @@ RSpec.describe "UsersSignups", type: :request do
       expect(response).to have_http_status(200)
     end
 
-    describe "form submission" do
+    describe "form submission", type: :feature do
 
+      before(:each) {
+        visit signup_path
+        fill_in 'user_name', with: 'user'
+        fill_in 'user_email', with: 'user@email.com'
+        fill_in 'user_password', with: 'password'
+        fill_in 'user_password_confirmation', with: 'password'
+        click_button 'Create my account'
+      }
       context "with valid user credntials" do
-        before(:each) {
-          post signup_path, params: {
-            user: {
-              name: 'test',
-              email: 'user@example.com',
-              password: 'password',
-              password_confirmation: 'password'
-            }
-          }
-        }
 
-        it "increments the User count by 1 on successful user submission" do
+        it "creates an inactive user" do
           expect(User.count).to eq(1)
+          expect(User.last.activated?).to eq(false)
         end
 
-        # REVIEW: user nolonger signed in due to adding email activation feature
-        xit "logs the user in" do
+        it "directs the user to check their email to activate the account" do
+          expect(page.body).to have_selector('div.alert.alert-success', text: 'Please check your email to activate your account.')
+        end
+
+        # REVIEW: listing 11.33 - simulate clicking link in email
+        xit "logs the user in following account activation" do
+          user = User.last
+          user.activation_token = User.new_token
+          get edit_account_activation_path(user.activation_token, email: user.email)
+
+          binding.pry
+          expect(user.activated?).to eq(true)
           expect(is_logged_in?).to be true
         end
 
       end
 
-
       context "with invalid user credentials" do
         before(:each) {
+          User.destroy_all
           post signup_path, params: {
             user: {
               name: '  ',
@@ -50,12 +60,8 @@ RSpec.describe "UsersSignups", type: :request do
           }
         }
 
-        it "does not change the User count if submission fails" do
+        it "fails to create user if submission fails" do
           expect(User.count).to eq(0)
-        end
-
-        it "does not log in the user" do
-          expect(is_logged_in?).to be false
         end
 
       end

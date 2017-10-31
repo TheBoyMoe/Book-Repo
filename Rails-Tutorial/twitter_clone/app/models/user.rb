@@ -49,6 +49,18 @@ class User < ApplicationRecord
     update_attribute(:remember_digest, nil)
   end
 
+  def activate
+    #  update_attribute(:activated,    true)
+    #  update_attribute(:activated_at, Time.zone.now)
+    # make a single database call
+    update_columns(activated: true, activated_at: Time.zone.now)
+  end
+
+   # Sends activation email.
+  def send_activation_email
+     UserMailer.account_activation(self).deliver_now
+  end
+
   private
     def create_activation_digest
       # set activation_token and _digest on each new user, _digest will be saved to the database when the user is saved

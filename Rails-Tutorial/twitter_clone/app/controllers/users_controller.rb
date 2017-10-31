@@ -13,12 +13,17 @@ class UsersController < ApplicationController
 
   def index
     # return users a page ata time, 30 records by default
-    @users = User.paginate(page: params[:page])
+    # @users = User.paginate(page: params[:page])
+
+    # list only users whose accounts have been activated
+    @users = User.where(activated: true).paginate(page: params[:page])
   end
 
   def show
-    # renders the user profile
+    # renders the user profile if account activated
     @user = User.find(params[:id])
+    # stops you seeing the account of users who aren't activated
+    redirect_to root_path and return unless @user.activated?
   end
 
   def new
@@ -33,7 +38,7 @@ class UsersController < ApplicationController
     @user = User.new(user_params)
     if @user.save
       # log_in(@user)
-      UserMailer.account_activation(@user).deliver_now
+      @user.send_activation_email
       # displayed on the first page after redirect
       flash[:success] = "Please check your email to activate your account."
       # you can use users_url, users_path or simply @user
