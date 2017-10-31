@@ -7,7 +7,6 @@ class User < ApplicationRecord
   # execute the method before creating the user
   before_create :create_activation_digest
 
-
   validates :name, presence: true, length: {maximum: 60}
   VALID_EMAIL_REGEX = /\A[\w+\-.]+@[a-z\d\-]+(\.[a-z\d\-]+)*\.[a-z]+\z/i
   validates :email, presence: true, length: {maximum: 255}, format: {with: VALID_EMAIL_REGEX}, uniqueness: {case_sensitive: false}
@@ -29,13 +28,20 @@ class User < ApplicationRecord
   # store a hashed version of the token in the database for use in persistent sessions
   def remember
     self.remember_token = User.new_token
-    update_attribute(:remember_digest, User.digest(self.remember_token))
+    update_attribute(:remember_digest, User.digest(remember_token))
   end
 
   # does the token match
-  def authenticated?(remember_token)
-    return false if remember_digest.nil?
-    BCrypt::Password.new(remember_digest).is_password?(remember_token)
+  # def authenticated?(remember_token)
+  #   return false if remember_digest.nil?
+  #   BCrypt::Password.new(remember_digest).is_password?(remember_token)
+  # end
+
+  # refactored to handle activation_ as well as remember_digest
+  def authenticated?(attribute, token)
+    digest = send("#{attribute}_digest")
+    return false if digest.nil?
+    BCrypt::Password.new(digest).is_password?(token)
   end
 
   # remove the saved token from the user record

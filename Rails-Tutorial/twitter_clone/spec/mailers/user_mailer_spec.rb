@@ -7,6 +7,7 @@ RSpec.describe UserMailer, type: :mailer do
   describe "account_activation" do
     before(:each) {
       @user = users(:michael)
+      @user.activation_token = User.new_token
     }
     let(:mail) {UserMailer.account_activation(@user)}
 
@@ -16,12 +17,11 @@ RSpec.describe UserMailer, type: :mailer do
       expect(mail.from).to eq(["noreply@example.com"])
     end
 
-    # REVIEW:
     it "renders the body" do
       expect(mail.body.encoded).to match("Hi")
       expect(mail.body.encoded).to match("#{@user.name}")
       expect(mail.body.encoded).to match("#{@user.activation_token}")
-      # expect(mail.body.encoded).to match(CGI.escape("#{@user.email}"))
+      expect(mail.body.encoded).to match(CGI.escape("#{@user.email}"))
     end
   end
 
