@@ -2,6 +2,8 @@ require 'rails_helper'
 
 RSpec.describe "UsersLogin", type: :request do
 
+  fixtures :all
+
   describe "user login" do
     before(:each){
       visit login_path
@@ -33,19 +35,18 @@ RSpec.describe "UsersLogin", type: :request do
     end
 
     context "with valid information", type: :feature do
+      let(:user) {users(:archer)}
 
       before(:each) {
-        @user = User.create(name: 'Andrew', email: 'andrew@example.com', password: 'password', password_confirmation: 'password')
-        fill_in 'session_email', with: 'andrew@example.com'
+        fill_in 'session_email', with: "#{user.email}"
         fill_in 'session_password', with: 'password'
         click_button 'Log in'
       }
 
       it "redirects the user to their profile page" do
-        # binding.pry
         expect(page.status_code).to eq(200)
-        expect(page.current_path).to eq("/users/#{@user.id}")
-        expect(page.body).to include('andrew')
+        expect(page.current_path).to eq("/users/#{user.id}")
+        expect(page.body).to include("#{user.name}")
       end
 
       it "displays the 'Log out' and 'Profile' links in the nav bar and removes the 'Login' link" do

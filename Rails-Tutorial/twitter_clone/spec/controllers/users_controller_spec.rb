@@ -2,6 +2,14 @@ require 'rails_helper'
 
 RSpec.describe UsersController, type: :controller do
 
+  fixtures :all
+
+  before(:each) {
+    @admin = users(:michael)
+    @user = users(:archer)
+    @count = User.count
+  }
+
   describe "GET #new" do
     it "returns http success" do
       get :new
@@ -9,13 +17,8 @@ RSpec.describe UsersController, type: :controller do
     end
   end
 
-  describe "#index" do
-    before(:each) do
-      @thomas = User.create(name: 'Thomas Jones', email: 'thomas@example.com', password: 'password', password_confirmation: 'password')
-      @andrew = User.create(name: 'Andrew Jones', email: 'andrew@example.com', password: 'password', password_confirmation: 'password')
-    end
-
-    context "user not logged in", type: :feature do
+  describe "#index", type: :feature do
+    context "user not logged in" do
       it "redirect the user to the 'Login' page" do
         visit users_path
 
@@ -24,10 +27,10 @@ RSpec.describe UsersController, type: :controller do
       end
     end
 
-    context "user logged in", type: :feature do
+    context "user logged in" do
       before(:each){
         visit login_path
-        fill_in 'session_email', with: 'andrew@example.com'
+        fill_in 'session_email', with: "#{@user.email}"
         fill_in 'session_password', with: 'password'
         click_button 'Log in'
         visit users_path
@@ -36,8 +39,8 @@ RSpec.describe UsersController, type: :controller do
 
       it "display a list of all the users" do
         expect(page.current_path).to eq('/users')
-        expect(page.body).to have_selector('a', text: 'Thomas Jones')
-        expect(page.body).to have_selector('a', text: 'Andrew Jones')
+        expect(page.body).to have_selector('a', text: "#{@admin.name}")
+        expect(page.body).to have_selector('a', text: "#{@user.name}")
       end
 
     end
@@ -46,13 +49,6 @@ RSpec.describe UsersController, type: :controller do
 
 
   describe "#destroy", type: :feature do
-    fixtures :all
-
-    before(:each) {
-      @admin = users(:michael)
-      @user = users(:archer)
-      @count = User.count
-    }
 
     context "not logged in" do
       it "redirects users to the login page" do
