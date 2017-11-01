@@ -22,6 +22,8 @@ class UsersController < ApplicationController
   def show
     # renders the user profile if account activated
     @user = User.find(params[:id])
+    # render the users microposts on their profile page
+    @microposts = @user.microposts.paginate(page: params[:page])
     # stops you seeing the account of users who aren't activated
     redirect_to root_path and return unless @user.activated?
   end
