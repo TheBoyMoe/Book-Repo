@@ -12,6 +12,8 @@ RSpec.describe Micropost, type: :model do
     # 'build' is equivalent to 'new', automatically adds user_id
     let(:post){user.microposts.build(content: 'dummy content, dummy content, dummy content')}
 
+    let(:most_recent){microposts(:most_recent)}
+
     it "is a valid micropost" do
       expect(post).to be_valid
       expect(post).to respond_to(:content)
@@ -34,6 +36,26 @@ RSpec.describe Micropost, type: :model do
 
       expect(post).not_to be_valid
     end
+
+    it "ensures that the most recent micropost is returned first" do
+      expect(Micropost.first).to eq(most_recent)
+    end
+
+    context "delete a user" do
+      let(:user2) {User.create(name: 'test', email: 'test@ex.com', password: 'password')}
+      before {
+        user2.microposts.create(content: 'dummy content')
+        user2.microposts.create(content: 'more dummy content')
+        @count = Micropost.count
+      }
+
+      it "ensures a users microposts are destroyed" do
+        user2.destroy
+
+        expect(Micropost.count).to eq(@count - 2)
+      end
+    end
+
   end
 
 end

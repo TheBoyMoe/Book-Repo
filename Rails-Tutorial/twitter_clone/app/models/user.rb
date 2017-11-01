@@ -2,7 +2,7 @@ class User < ApplicationRecord
   attr_accessor :remember_token, :activation_token, :reset_token
 
   # associations
-  has_many :microposts
+  has_many :microposts, dependent: :destroy # => destroy all user posts upon destroying user
 
   # callback method executed before saving the user(both creation and update)
   before_save :downcase_email
