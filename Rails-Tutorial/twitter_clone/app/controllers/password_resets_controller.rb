@@ -27,17 +27,18 @@ class PasswordResetsController < ApplicationController
 
   # check to ensure the reset_token has not expired is excuted prior to #update action
   def update
-    # update fails due to empty password & password confrmation
     if params[:user][:password].empty?
+      # update fails due to empty password & password confrmation
       @user.errors.add(:password, "can't be empty")
       render 'edit'
-    # update is successful
     elsif @user.update_attributes(user_params)
+      # update is successful, login user and clear digest
       log_in @user
+      @user.update_attribute(:reset_digest, nil)
       flash[:success] = "Password has been reset."
       redirect_to @user
-    # update fails due to invalid password
     else
+      # update fails due to invalid password
       render 'edit'
     end
   end
@@ -54,6 +55,7 @@ class PasswordResetsController < ApplicationController
 
     def valid_user
       unless (@user && @user.activated? && @user.authenticated?(:reset, params[:id]))
+        flash[:danger] = "User acount is inactive or account authentication failed"
         redirect_to root_path
       end
     end
