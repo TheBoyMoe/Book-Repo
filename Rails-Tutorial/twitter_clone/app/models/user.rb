@@ -1,9 +1,11 @@
 class User < ApplicationRecord
   attr_accessor :remember_token, :activation_token, :reset_token
 
+  # associations
+  has_many :microposts
+
   # callback method executed before saving the user(both creation and update)
   before_save :downcase_email
-
   # execute the method before creating the user
   before_create :create_activation_digest
 
