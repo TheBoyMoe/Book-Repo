@@ -1,4 +1,5 @@
 class MicropostsController < ApplicationController
+  before_action :logged_in_user, only: [:create, :destroy]
 
   def create
 
@@ -7,5 +8,5 @@ class MicropostsController < ApplicationController
   def destroy
 
   end
-  
+
 end
