@@ -81,6 +81,11 @@ class User < ApplicationRecord
     reset_sent_at < 2.hours.ago
   end
 
+  # return the users feed
+  def feed
+    Micropost.where("user_id = ?", id)
+  end
+
   private
     def create_activation_digest
       # set activation_token and _digest on each new user, _digest will be saved to the database when the user is saved
