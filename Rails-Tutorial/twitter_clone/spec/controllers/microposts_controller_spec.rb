@@ -3,16 +3,17 @@ require 'rails_helper'
 RSpec.describe MicropostsController, type: :controller do
 
   fixtures :all
-  let(:count) { Micropost.count }
   let(:user) {users(:archer)}
 
   describe "#create", type: :feature do
 
+    # REVIEW: post method for adding content
     context "user not logged in" do
       it "micropost count remains unchanged, and the user is redirected to the login page" do
+        @count = Micropost.count
         page.driver.submit :post, microposts_path, { micropost: { content: "Chuck Norris can't test for equality because he has no equal." }}
 
-        expect(Micropost.count).to eq(count)
+        expect(Micropost.count).to eq(@count)
         expect(page.current_path).to eq('/login')
       end
 
@@ -24,17 +25,20 @@ RSpec.describe MicropostsController, type: :controller do
         fill_in 'session_email', with: "#{user.email}"
         fill_in 'session_password', with: "password"
         click_button 'Log in'
+        @pre_count = user.microposts.count
       }
 
       it "micropost count will increase by one" do
-        page.driver.submit :post, microposts_path, { micropost: { content: "Chuck Norris can't test for equality because he has no equal." }}
+        visit root_path
+        fill_in 'micropost_content', with: "Chuck Norris can't test for equality because he has no equal."
+        click_button 'Post'
 
-        expect(Micropost.count).to eq(count + 1)
+        expect(user.microposts.count).to eq(@pre_count + 1)
       end
     end
   end
 
-  describe "#destroy", type: :feature do
+  xdescribe "#destroy", type: :feature do
     let(:post) { microposts(:orange) }
 
     context "user is not logged in" do
