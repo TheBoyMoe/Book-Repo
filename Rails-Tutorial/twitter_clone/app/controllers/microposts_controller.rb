@@ -8,6 +8,8 @@ class MicropostsController < ApplicationController
       flash[:success] = "Micropost created!"
       redirect_to root_path
     else
+      # FIXME: app breaks if the content is empty or work file type used
+      @feed_items = []
       render 'static/home'
     end
   end
