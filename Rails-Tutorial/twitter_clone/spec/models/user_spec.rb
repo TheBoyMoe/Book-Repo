@@ -3,6 +3,8 @@ require 'rails_helper'
 RSpec.describe User, type: :model do
   let!(:user) {User.new(name: 'user', email: 'user@example.com', password: 'password', password_confirmation: 'password')}
 
+  fixtures :all
+
   it "is a valid user" do
     expect(user).to be_valid
     expect(user).to respond_to(:name)
@@ -103,6 +105,28 @@ RSpec.describe User, type: :model do
       page.driver.submit :patch, user_path(user), { user: {password: 'password', password_confirmation: 'password', admin: true } }
 
       expect(user.admin?).to eq(false)
+    end
+  end
+
+  context "follow and unfollow" do
+    let(:michael){users(:michael)}
+    let(:archer){users(:archer)}
+    let!(:count){michael.following.count}
+
+    it "allows a user to follow another user" do
+      michael.follow(archer)
+
+      expect(michael.following.count).to eq(count + 1)
+      expect(michael.following?(archer)).to eq(true)
+      expect(archer.following?(michael)).to eq(false)
+    end
+
+    it "allows a user to unfollow another user" do
+      michael.follow(archer)
+      michael.unfollow(archer)
+
+      expect(michael.following.count).to eq(count)
+      expect(michael.following?(archer)).to eq(false)
     end
   end
 
