@@ -118,7 +118,7 @@ RSpec.describe User, type: :model do
 
       expect(michael.following.count).to eq(count + 1)
       expect(michael.following?(archer)).to eq(true)
-      expect(archer.following?(michael)).to eq(false)
+      expect(archer.followers.include?(michael)).to eq(true)
     end
 
     it "allows a user to unfollow another user" do
@@ -127,6 +127,7 @@ RSpec.describe User, type: :model do
 
       expect(michael.following.count).to eq(count)
       expect(michael.following?(archer)).to eq(false)
+      expect(archer.followers.include?(michael)).to eq(false)
     end
   end
 

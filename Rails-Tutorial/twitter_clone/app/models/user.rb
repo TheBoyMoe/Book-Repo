@@ -5,8 +5,9 @@ class User < ApplicationRecord
   has_many :microposts, dependent: :destroy # => destroy all user posts upon destroying user
 
   has_many :active_relationships, class_name:  "Relationship",  foreign_key: "follower_id", dependent:   :destroy
+  has_many :passive_relationships, class_name:  "Relationship", foreign_key: "followed_id", dependent:   :destroy
   has_many :following, through: :active_relationships, source: :followed
-
+  has_many :followers, through: :passive_relationships, source: :follower
 
   # callback method executed before saving the user(both creation and update)
   before_save :downcase_email
@@ -90,7 +91,7 @@ class User < ApplicationRecord
     Micropost.where("user_id = ?", id)
   end
 
-  # Follows a user.
+  # Follows a user - follow the other_user
  def follow(other_user)
    following << other_user
  end
