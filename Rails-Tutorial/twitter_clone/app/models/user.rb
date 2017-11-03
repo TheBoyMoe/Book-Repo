@@ -4,6 +4,9 @@ class User < ApplicationRecord
   # associations
   has_many :microposts, dependent: :destroy # => destroy all user posts upon destroying user
 
+  has_many :active_relationships, class_name:  "Relationship",  foreign_key: "follower_id", dependent:   :destroy
+
+
   # callback method executed before saving the user(both creation and update)
   before_save :downcase_email
   # execute the method before creating the user
