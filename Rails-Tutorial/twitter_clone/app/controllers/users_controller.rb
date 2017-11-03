@@ -2,7 +2,7 @@ class UsersController < ApplicationController
 
   # `before filter` - ensure that users are logged in before they can
   # execute the following actions, by default before_filter applies to every action
-  before_action :logged_in_user, only: [:index, :edit, :update, :destroy]
+  before_action :logged_in_user, only: [:index, :edit, :update, :destroy, :following, :followers]
 
   # ensure that the current user can only edit/update their own profile
   before_action :correct_user, only: [:edit, :update]
@@ -71,6 +71,21 @@ class UsersController < ApplicationController
     flash[:success] = 'User deleted'
     redirect_to users_path
   end
+
+  def following
+    @title = "Following"
+    @user  = User.find_by(id: params[:id])
+    @users = @user.following.paginate(page: params[:page])
+    render 'show_follow'
+  end
+
+  def followers
+    @title = "Followers"
+    @user  = User.find_by(id: params[:id])
+    @users = @user.followers.paginate(page: params[:page])
+    render 'show_follow'
+  end
+
 
   private
     def user_params

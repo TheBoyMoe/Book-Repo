@@ -47,7 +47,6 @@ RSpec.describe UsersController, type: :controller do
 
   end
 
-
   describe "#destroy", type: :feature do
 
     context "not logged in" do
@@ -96,6 +95,27 @@ RSpec.describe UsersController, type: :controller do
         end
       end
 
+
+    end
+  end
+
+  describe "follow and unfollow", type: :feature do
+
+    context "not logged in" do
+      it "redirects user to the 'login' page when trying to access the profile of someone they are following" do
+        visit following_user_path(@user)
+        
+        expect(page.current_path).to eq('/login')
+      end
+
+      it "redirects user to the login page when trying to access the profile of one of their followers" do
+        visit followers_user_path(@user)
+
+        expect(page.current_path).to eq('/login')
+      end
+    end
+
+    context "logged in" do
 
     end
   end
