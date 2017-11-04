@@ -5,7 +5,7 @@ RSpec.describe "Followings", type: :request do
   fixtures :all
   let(:user) {users(:michael)}
   let(:following) {user.following}
-  let(:followed) {user.followers}
+  let(:followers) {user.followers}
 
   before(:each) {
     visit login_path
