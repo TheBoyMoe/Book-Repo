@@ -88,8 +88,14 @@ class User < ApplicationRecord
 
   # return the users feed
   def feed
-    # Micropost.where("user_id = ?", id)
-    Micropost.where("user_id IN (?) OR user_id = ?", following_ids, id)
+    # Micropost.where("user_id = ?", id) # only the users posts
+
+    # users and followed posts, inefficient - pulls all followed users id's in to memory
+    # Micropost.where("user_id IN (?) OR user_id = ?", following_ids, id)
+
+    # section 14.3.3
+    following_ids = "SELECT followed_id FROM relationships WHERE  follower_id = :user_id"
+    Micropost.where("user_id IN (#{following_ids}) OR user_id = :user_id", user_id: id)
   end
 
   # Follows a user - follow the other_user
