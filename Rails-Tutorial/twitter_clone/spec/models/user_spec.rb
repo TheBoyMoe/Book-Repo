@@ -151,19 +151,19 @@ RSpec.describe User, type: :model do
 
     it "includes posts of the current user" do
       michael.microposts.each do |post|
-        expect(michael.feed).to include?(post)
+        expect(michael.feed).to include(post)
       end
     end
 
     it "includes posts of followed users" do
       lana.microposts.each do |post|
-        expect(michael.feed).to include?(post)
+        expect(michael.feed).to include(post)
       end
     end
 
     it "does not include posts of un-followed users" do
       archer.microposts.each do |post|
-        expect(michael.feed).not_to include?(post)
+        expect(michael.feed).not_to include(post)
       end
     end
 
