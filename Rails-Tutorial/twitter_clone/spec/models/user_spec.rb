@@ -5,78 +5,82 @@ RSpec.describe User, type: :model do
 
   fixtures :all
 
-  it "is a valid user" do
-    expect(user).to be_valid
-    expect(user).to respond_to(:name)
-    expect(user).to respond_to(:email)
-    expect(user).to respond_to(:password_digest)
-    expect(user).to respond_to(:password)
-    expect(user).to respond_to(:password_confirmation)
-    expect(user).to respond_to(:remember_token)
-    expect(user).to respond_to(:authenticate)
-    expect(user).to respond_to(:admin)
-  end
+  describe "attribute validations" do
 
-  it "should have a value for the name attribute" do
-    user.update_attribute(:name, '    ')
-    expect(user).not_to be_valid
-  end
+    it "is a valid user" do
+      expect(user).to be_valid
+      expect(user).to respond_to(:name)
+      expect(user).to respond_to(:email)
+      expect(user).to respond_to(:password_digest)
+      expect(user).to respond_to(:password)
+      expect(user).to respond_to(:password_confirmation)
+      expect(user).to respond_to(:remember_token)
+      expect(user).to respond_to(:authenticate)
+      expect(user).to respond_to(:admin)
+    end
 
-  it "should have a name less than 61 characters in length" do
-    user.update_attribute(:name, 'a' * 61)
-    expect(user).not_to be_valid
-  end
-
-
-  it "should have a value for the email attribute" do
-    user.update_attribute(:email, '   ')
-    expect(user).not_to be_valid
-  end
-
-  it "should have an email address less than 255 characters in length" do
-    user.update_attribute(:email, 'a' * 244 + '@example.com')
-    expect(user).not_to be_valid
-  end
-
-  it "should reject invalid email addresses" do
-    addresses = %w[user@foo,com user_at_foo.org example.user@foo.foo@bar_baz.com foo@bar+baz.com foo@bar..com]
-    addresses.each do |invalid_address|
-      user.update_attribute(:email, invalid_address)
+    it "should have a value for the name attribute" do
+      user.update_attribute(:name, '    ')
       expect(user).not_to be_valid
     end
-  end
 
-  it "should accept valid email addresses" do
-    addresses = %w[user@foo.COM A_US-ER@f.b.org frst.lst@foo.jp a+b@baz.cn]
-    addresses.each do |valid_address|
-      user.update_attribute(:email, valid_address)
-      expect(user).to be_valid
+    it "should have a name less than 61 characters in length" do
+      user.update_attribute(:name, 'a' * 61)
+      expect(user).not_to be_valid
     end
-  end
 
-  it "should ensure that email addresses are unique" do
-    user2 = User.create(name: 'user2', email: 'user@example.com')
-    expect(user2).not_to be_valid
-  end
 
-  it "should ensure email address are saved as lowercase" do
-    user.update_attribute(:email, 'FoO@BAR.com')
-    expect(user.reload.email).to eq('foo@bar.com')
-  end
+    it "should have a value for the email attribute" do
+      user.update_attribute(:email, '   ')
+      expect(user).not_to be_valid
+    end
 
-  it "should ensure passwords, and password confirmations are not blank" do
-    user.update_attributes(password: '  ', password_confirmation: '  ')
-    expect(user).not_to be_valid
-  end
+    it "should have an email address less than 255 characters in length" do
+      user.update_attribute(:email, 'a' * 244 + '@example.com')
+      expect(user).not_to be_valid
+    end
 
-  it "should ensure that password and password confirmation match" do
-    user.update_attributes(password: 'password1', password_confirmation: 'password2')
-    expect(user).not_to be_valid
-  end
+    it "should reject invalid email addresses" do
+      addresses = %w[user@foo,com user_at_foo.org example.user@foo.foo@bar_baz.com foo@bar+baz.com foo@bar..com]
+      addresses.each do |invalid_address|
+        user.update_attribute(:email, invalid_address)
+        expect(user).not_to be_valid
+      end
+    end
 
-  it "should ensure passwords have a minimum length of 6 characters" do
-    user.update_attribute(:password, 'a' * 5)
-    expect(user).not_to be_valid
+    it "should accept valid email addresses" do
+      addresses = %w[user@foo.COM A_US-ER@f.b.org frst.lst@foo.jp a+b@baz.cn]
+      addresses.each do |valid_address|
+        user.update_attribute(:email, valid_address)
+        expect(user).to be_valid
+      end
+    end
+
+    it "should ensure that email addresses are unique" do
+      user2 = User.create(name: 'user2', email: 'user@example.com')
+      expect(user2).not_to be_valid
+    end
+
+    it "should ensure email address are saved as lowercase" do
+      user.update_attribute(:email, 'FoO@BAR.com')
+      expect(user.reload.email).to eq('foo@bar.com')
+    end
+
+    it "should ensure passwords, and password confirmations are not blank" do
+      user.update_attributes(password: '  ', password_confirmation: '  ')
+      expect(user).not_to be_valid
+    end
+
+    it "should ensure that password and password confirmation match" do
+      user.update_attributes(password: 'password1', password_confirmation: 'password2')
+      expect(user).not_to be_valid
+    end
+
+    it "should ensure passwords have a minimum length of 6 characters" do
+      user.update_attribute(:password, 'a' * 5)
+      expect(user).not_to be_valid
+    end
+
   end
 
   describe "authenticated?" do
@@ -86,7 +90,7 @@ RSpec.describe User, type: :model do
     end
   end
 
-  context "admin attribute", type: :feature do
+  describe "admin attribute", type: :feature do
 
     let(:user) {User.create(name: 'test', email: 'test@ex.com', password: 'password')}
 
@@ -108,7 +112,7 @@ RSpec.describe User, type: :model do
     end
   end
 
-  context "follow and unfollow" do
+  describe "follow and unfollow" do
     let(:michael){users(:michael)}
     let(:archer){users(:archer)}
     let!(:count){michael.following.count}
@@ -129,6 +133,40 @@ RSpec.describe User, type: :model do
       expect(michael.following?(archer)).to eq(false)
       expect(archer.followers.include?(michael)).to eq(false)
     end
+  end
+
+  describe "status feed should have the correct posts", type: :feature do
+
+    let(:michael) {users(:michael)}
+    let(:lana) {users(:lana)}
+    let(:archer) {users(:archer)}
+
+    before(:each) {
+      visit login_path
+      fill_in 'session_email', with: "#{michael.email}"
+      fill_in 'session_password', with: 'password'
+      click_button 'Log in'
+      visit user_path(michael.id)
+    }
+
+    it "includes posts of the current user" do
+      michael.microposts.each do |post|
+        expect(michael.feed).to include?(post)
+      end
+    end
+
+    it "includes posts of followed users" do
+      lana.microposts.each do |post|
+        expect(michael.feed).to include?(post)
+      end
+    end
+
+    it "does not include posts of un-followed users" do
+      archer.microposts.each do |post|
+        expect(michael.feed).not_to include?(post)
+      end
+    end
+
   end
 
 end
