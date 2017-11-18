@@ -28,14 +28,35 @@ RSpec.describe 'A cup of coffee' do
     expect(coffee.price).to eq(1.0)
   end
 
-  # use 'context' when modifying the object being tested
-  # to run a 'focused' example/group, add 'f' to 'it/describe/context' -> 'fit/fdescribe/fcontext'
-  # => only the example/group is run
-  fcontext 'with milk' do
+  context 'with milk' do
     before{coffee.add :milk}
 
     it "costs $1.25" do
       expect(coffee.price).to eq(1.25)
     end
+
+    # NOTES:
+    # use 'context' when modifying the object being tested
+
+    # to run a 'focused' example/group, add 'f' to 'it/describe/context' -> 'fit/fdescribe/fcontext'
+    #     => only the example/group is run
+
+    # to mark an example/group as pending and skip execuption, add 'x' to 'it/describe/context' -> 'xit/xdescribe/xcontext'
+    #     => you can also add the word 'pending' or 'skip' anywhere inside the method body (any code before 'pending' will still run)
+    #     => add a description, e.g `pending 'test not yet implemented'`, `skip 'Test not yet implemented'`
+    #     => any test with a description, but no body is marked as pending
+
+    it "is light in color" do
+      # pending 'Color not yet implemented' # runs the test, results expected to fail. Any passing tests are marked as failures
+      # skip 'Not yet implemented' # doesn't run the test
+      expect(coffee.color).to eq(:light)
+    end
+
+    it "is cooler than 200 degrees Farenheit" do
+      # pending "Temperature no yet implemented"
+      expect(coffee.temperature).to be < 200.0
+    end
+
   end
+
 end
