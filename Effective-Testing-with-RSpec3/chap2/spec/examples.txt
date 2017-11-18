@@ -4,3 +4,5 @@ example_id                   | status | run_time        |
 ./spec/coffee_spec.rb[1:2:1] | passed | 0.0001 seconds  |
 ./spec/coffee_spec.rb[1:2:2] | passed | 0.00009 seconds |
 ./spec/coffee_spec.rb[1:2:3] | passed | 0.00253 seconds |
+./spec/tea_spec.rb[1:1]      | passed | 0.00083 seconds |
+./spec/tea_spec.rb[1:2]      | passed | 0.00157 seconds |
