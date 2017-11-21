@@ -42,6 +42,20 @@ NOTES:
   * you can also add the word 'pending' or 'skip' anywhere inside the method body (any code before 'pending' will still run)
     * add a description, e.g `pending 'test not yet implemented'`, `skip 'Test not yet implemented'`
 
+  * you can also mark groups/examples with `:pending => true`, e.g., so disabling a whole group or individual test. 
+
+  ```ruby
+    context 'invalid', :pending => true do
+     before :each do
+       @game = HangpersonGame.new('foobar')
+     end
+     it 'throws an error when empty', :pending => true do
+       expect { @game.guess('') }.to raise_error(ArgumentError)
+     end
+    end
+  ```
+
+
   * any test with a description, but no body is marked as pending
 
   * tests marked with the `pending` keyword are expected to fail and are still run - appear in yellow
