@@ -35,7 +35,10 @@ require 'coffee'
           config.example_status_persistence_file_path = ​'path/to/file.txt'​
         end
 
-  5. you can execute the next failure only with the '---next-failure' option
+    similar to the '--fail-fast' option which stops at the first failure
+      - does not require spec_helper configuration
+
+  5. you can execute the next failure only with the '--next-failure' option
   $ rspec spec/ --next-failure
     #=> run rspec normally first time, add the option to subsequent runs
     #=> stops execution at the first failure
