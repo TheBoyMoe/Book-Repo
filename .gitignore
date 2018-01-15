@@ -1,3 +1,8 @@
 Rails-Tutorial/twitter_clone/coverage/
-Rails-Tutorial/twitter_clone/public/uploads/
+Rails-Tutrial/twitter_clone/public/uploads/
+Rails-Tutorial/twitter_clone/tmp/
+Rails-Tutorial/twitter_clone/log/
+Rails-Tutorial/twitter_clone/db/*.sqlite3
+Rails-Tutorial/twitter_clone/public/uploads/tmp/
 .DS_Store
+.idea/
