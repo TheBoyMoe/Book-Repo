@@ -1,5 +1,8 @@
 ## Running RSpec command
 
+[Agile Ventures RSpec Mob C9 instnce](https://ide.c9.io/tansaku/agile-ventures-mob)
+[Agile Ventures mob videos](https://www.youtube.com/playlist?list=PLuyBZ95Nkc4bpwbzOTAkHy1Sj-kFNsdom) 
+
 ```bash
 $ rspec /spec # run all tests in spec folder
 
