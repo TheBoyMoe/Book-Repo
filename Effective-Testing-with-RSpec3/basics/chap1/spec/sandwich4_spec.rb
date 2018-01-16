@@ -1,7 +1,9 @@
 RSpec.describe 'An ideal sandwich' do
   Sandwich = Struct.new(:taste, :toppings)
 
-  # the block is run the first time 'sandwich' is called, bound to the variable 'sandwich' and then available there after
+  # the code block is bound to the name 'sandwich' and then run the first time
+	# 'sandwich' is called, and then available there after
+	# an improvement on the before{} which is run each time, even if not req'd for that example
   let(:sandwich){Sandwich.new('delicious', [])}
 
   it "is delicious" do
