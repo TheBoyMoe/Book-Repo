@@ -25,4 +25,20 @@ Workflow:
 
 Write the code you wish you had
 - then fill in the implementation
-- design thing's from the caller's perspective			
+- design thing's from the caller's perspective
+
+
+### To Run the App
+
+Add a config.ru file to the project root, add add the following code:
+
+````ruby
+	require_relative 'app/api'
+	
+	run ExpenseTracker::API.new
+````
+	
+From the command line you can run the app with `bundle exec rackup`
+
+To submit a request to the server: `curl localhost:9292/expenses/2017-06-10 -w "\n"​`
+
