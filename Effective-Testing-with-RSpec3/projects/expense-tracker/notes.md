@@ -18,3 +18,11 @@ We'll use 4 libraries:
 	note: always use `bundle exec` to always run the versions of the libs your expecting
 - add `ENV['RACK_ENV'] = 'test'` to the top of spec_helper - tells Sinatra to pass errprs to the test framework				
 			
+Workflow:
+- decide what is the core behaviour of the project
+- write the first part of that behaviour as a spec
+- then implement the behaviour
+
+Write the code you wish you had
+- then fill in the implementation
+- design thing's from the caller's perspective			
