@@ -3,7 +3,7 @@ require 'rack/test'
 
 module ExpenseTracker
 	# Our API class should be able to return 'success'? state, an 'expense_id' and any 'error_message'
-	RecordedResult = Struct.new(:success?, :expense_id, :error_message)
+	# RecordResult = Struct.new(:success?, :expense_id, :error_message) # moved to ledger file
 
 	RSpec.describe API do
 		include Rack::Test::Methods
@@ -27,7 +27,7 @@ module ExpenseTracker
 
 				before {
 					# the ledger test double returns a canned result - RecordResult
-					allow(ledger).to receive(:record).with(expense).and_return(RecordedResult.new(true, 417, nil))
+					allow(ledger).to receive(:record).with(expense).and_return(RecordResult.new(true, 417, nil))
 				}
 
 				it "returns the expense id" do
@@ -48,7 +48,7 @@ module ExpenseTracker
 				let(:expense){{'some' => 'data'}}
 
 				before {
-					allow(ledger).to receive(:record).with(expense).and_return(RecordedResult.new(false, 417, 'Expense incomplete'))
+					allow(ledger).to receive(:record).with(expense).and_return(RecordResult.new(false, 417, 'Expense incomplete'))
 				}
 
 				# check for an error message
