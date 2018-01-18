@@ -72,6 +72,8 @@ require 'coffee'
       - 'xit', 'xcontext' , 'xcontext'
     - the example/group is skipped with the description & explanation displayed in yellow
 
+  10. to see the full back trace, add the '--backtrace' or '-b' option
+
 =end
 
 
