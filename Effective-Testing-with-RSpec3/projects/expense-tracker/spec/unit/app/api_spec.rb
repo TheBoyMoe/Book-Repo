@@ -30,7 +30,14 @@ module ExpenseTracker
 					expect(parsed).to include('expense_id' => 417)
 				end
 
-				it "responds with a 200(OK)"
+				# sinatra returns a 200(OK) status code unless an error occurs or you explicitly set one
+				it "responds with a 200(OK)" do
+					expense = {'some' => 'data'}
+					allow(ledger).to receive(:record).with(expense).and_return(RecordedResult.new(true, 417, nil))
+
+					post '/expenses', JSON.generate(expense)
+					expect(last_response.status).to eq(200)
+				end
 
 			end
 
