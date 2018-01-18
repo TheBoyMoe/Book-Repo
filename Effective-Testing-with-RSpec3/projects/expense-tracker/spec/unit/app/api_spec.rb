@@ -8,13 +8,14 @@ module ExpenseTracker
 	RSpec.describe API do
 		include Rack::Test::Methods
 
+		# we'll create a test double to stand in for the ledger using RSpec's 'instance_double' class
+		# note: the class does not have to exist
+		let(:ledger) {instance_double('ExpenseTracker::Ledger')}
+
 		def app
 			API.new(ledger: ledger)
 		end
 
-		# we'll create a test double to stand in for the ledger using RSpec's 'instance_double' class
-		# note: the class does not have to exist
-		let(:ledger) {instance_double('ExpenseTracker::Ledger')}
 
 		describe "POST/expenses" do
 

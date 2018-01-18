@@ -19,8 +19,13 @@ module ExpenseTracker
 
 
 		# route that handles submitting 'expense'
+		# parse the expense from the request body
+		# record it to the Ledger(either fake-it(for testing) or to a real database)
+		# return JSON obj containing the expense_id
 		post '/expenses' do
-			JSON.generate('expense_id' => 42)
+			expense = JSON.parse(request.body.read)
+			result = @ledger.record(expense)
+			JSON.generate('expense_id' => result.expense_id)
 		end
 
 		# route that handles fetching expenses by date
