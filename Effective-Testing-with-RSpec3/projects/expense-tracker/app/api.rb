@@ -24,7 +24,6 @@ module ExpenseTracker
 		# return JSON obj containing the expense_id
 		post '/expenses' do
 			# status 404 - checks that the 2nd spec will catch an error code
-
 			expense = JSON.parse(request.body.read)
 			result = @ledger.record(expense)
 			JSON.generate('expense_id' => result.expense_id)
