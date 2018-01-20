@@ -8,3 +8,4 @@ Rails-Tutorial/twitter_clone/public/uploads/tmp/
 .idea/
 
 Effective-Testing-with-RSpec3/projects/expense-tracker/spec/*.txt
+Effective-Testing-with-RSpec3/projects/expense-tracker/db/*.db
