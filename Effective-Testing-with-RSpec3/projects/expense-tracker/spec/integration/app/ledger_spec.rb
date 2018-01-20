@@ -1,6 +1,4 @@
 require_relative '../../../app/ledger'
-require_relative '../../../config/sequel'
-
 
 
 =begin
