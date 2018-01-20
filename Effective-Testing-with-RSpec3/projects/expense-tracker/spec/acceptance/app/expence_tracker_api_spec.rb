@@ -1,6 +1,6 @@
 require 'rack/test'
 require 'json'
-require_relative '../../app/api'
+require_relative '../../../app/api'
 
 # Write the code you wish you had
 #  - then fill in the implementation
