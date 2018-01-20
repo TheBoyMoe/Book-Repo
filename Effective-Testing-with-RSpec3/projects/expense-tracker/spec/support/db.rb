@@ -8,4 +8,10 @@ RSpec.configure do |c|
 		# clear any lingering data
 		DB[:expenses].truncate
 	end
+
+	# ensure that the database is cleared of all transactions between runs
+	c.around(:example, :db) do |example|
+		DB.transaction(rollback: :always) {example.run}
+	end
+
 end
