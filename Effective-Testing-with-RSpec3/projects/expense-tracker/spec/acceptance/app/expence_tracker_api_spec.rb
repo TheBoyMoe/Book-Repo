@@ -36,7 +36,7 @@ module ExpenseTracker
 
 
 		it "records submitted expenses" do
-			pending "Need to persist expenses to the server"
+			# pending "Need to persist expenses to the server"
 
 			# we can use either strings or symbols for the keys - JSON treats them th same
 			# POST expenses to the web app

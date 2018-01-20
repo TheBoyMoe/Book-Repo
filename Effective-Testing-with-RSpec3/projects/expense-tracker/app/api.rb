@@ -38,7 +38,7 @@ module ExpenseTracker
 
 		# route that handles fetching expenses by date
 		get '/expenses/:date' do
-			JSON.generate([])
+			JSON.generate(@ledger.expenses_on(params[:date]))
 		end
 
 	end
