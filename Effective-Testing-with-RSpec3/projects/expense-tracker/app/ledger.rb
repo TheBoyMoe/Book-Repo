@@ -13,5 +13,11 @@ module ExpenseTracker
 			id = DB[:expenses].max(:id)
 			RecordResult.new(true, id, nil)
 		end
+
+		def expenses_on(date)
+			# use the sequel 'where' method to query the database
+			DB[:expenses].where(date: date).all
+		end
+
 	end
 end
