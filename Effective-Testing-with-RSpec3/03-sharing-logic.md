@@ -34,11 +34,11 @@ There a three main ways in RSpec
 ### Hooks
 
 Use a hook when 'let' isn't enough, e.g, you need to modify configuration, write to a file, etc.
-You need to take into account 'type' - when the hook runs in relation to the example, and 'scope' - how often the hook runs.
+You need to take into account 'type' - when the hook runs in relation to the example, and 'scope' - how often the hook runs. Hooks allow you to declare chunks of code that run before, after,or around your specs.  A hook can run for each `:example`, once foreach `:context`, or globally for the entire `:suite`.
 
 #### Type
 
-- before - runs before the example 
+- before - runs before the example/group/suite
 - after - runs after the example, even if an exception is raised. After hooks are intended to clean up after your setup and specs.
 
 It's recommended using a 'before' hook for database cleanup.
