@@ -42,3 +42,56 @@ Any Ruby object can be used as a matcher as long as it implements a minimal set 
 - `matches?` and `failure_message` are the only methods a simple matcher need to define.
 - Matchers use Ruby's `===` method, case equality, defines a category to which other objects may(or may not) belong.
 
+
+### RSpec's Matchers
+
+Fall in to three broad groups:
+
+*primitive matchers*
+ 
+- check basic data types such as strings, numbers, booleans, etc
+- do not accept other matchers as input, though you can pass them to higher-order matchers
+- generally used to check equality and identity
+- most of the time we're concerned with value equality, use `eq` which uses `==` operator
+- when checking for identity, i.e. two references refer to the same underlying object, use `equal`, which uses Ruby's `equal?` operator
+
+```ruby
+	expect(first).to equal(second)
+	
+	# or you can use `be`, which is an alias for `equal`
+ 	expect(first).to be(second) 
+```
+
+- we can also check for hash key equality, check that two values should be considered the same hash key. Use `eql`, which uses Ruby's `eql?` operator.
+
+
+```ruby
+	# examples of other useful matchers
+  expect(value).to be_truthy # in Ruby only 'nil' and 'false' are falsey
+  expect(value).not_to be_truthy
+ 
+  expect(value).to be_falsey
+  expect(value).not_to be_falsey
+  
+  expect(value).to be == 1
+  expect(value).to be > 1
+  expect(value).to be < 1
+  expect(value).to be >= 1
+  expect(value).to be <= 1
+  
+```
+
+
+
+*higher-order matchers*
+
+- take other matchers as input
+
+
+
+*block matchers*
+
+- check the properties of code, e.g. blocks, exceptions and side effects
+
+
+ 
