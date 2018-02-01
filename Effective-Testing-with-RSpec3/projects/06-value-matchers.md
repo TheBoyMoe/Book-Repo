@@ -12,6 +12,10 @@
   expect​(a).to_not matcher
   
   **equality/identity**
+  
+  eq uses the == operator (uses Ruby's eq?)
+  equal uses === operator (uses Ruby's equal?)
+  eql used to check for hash equality (Uses Ruby's eql?)
 	 
 	| Matcher        | Passes If	           | Available aliases  						|
 	| -------------  |:---------------------:| ------------------------------:|
@@ -22,11 +26,13 @@
 	
 	**Truthiness and nil**
 	
+	In Ruby nil and false are both treated as false, everything else is true
+	
   | Matcher        | Passes If	           		 | Available aliases  				|
 	| -------------  |:-------------------------:| --------------------------:|
 	| be_truthy    	 | a != nil && a != false    | a_truthy_value							|
 	| be true		     | a == true			     		   | 												  	|
-	| be_falsey      | a == nil || a == false    | be_falsey									|
+	| be_falsey      | a == nil || a == false    | be_falsy 									|
 	| 					     | 												   | a_falsey_value							|
 	| 					     | 												   | a_falsy_value							|
 	| be false	     | a == false							   | 														|
@@ -37,7 +43,7 @@
 	
 	| Matcher 						      | Passes If	        		 | Available aliases  				|
   | ------------------------  |:----------------------:| --------------------------:|
-  | be_an_instance_of(klass		| a.class == klass		   | be_instance_of(klass				|
+  | be_an_instance_of(klass)	| a.class == klass		   | be_instance_of(klass				|
   | 					  						  | 										   | an_instance_of(klass				|
   | be_a_kind_of(klass) 	    | a.is_a?(klass) 			   | be_a(klass)								|
   | 					   						  | 										   | be_kind_of(klass)					|
@@ -57,7 +63,11 @@
 	| be === x	     | a === x								   | a_value === x							|
     
     
-	**Delta/Range Comparrisons**    
+	**Delta/Range Comparrisons**
+	
+	 Because binary's representation of floats is imperfect, use be_within matcher
+	 The value passed to be_within is the 'delta' or absolute difference in either direction
+	 To express a range use be_between 
     
   | Matcher 								      | Passes If	            		 | Available aliases  							|
 	| ----------------------------  |:--------------------------:| --------------------------------:|
@@ -102,6 +112,8 @@
   
   
   **Dynamic Predicates**
+  
+  A predicate is a method that 'answers a question' with a boolean.
   
   | Matcher        				 | Passes If	           		 							 | Available aliases  				|
 	| ---------------------  |:---------------------------------------:| --------------------------:|
