@@ -85,9 +85,8 @@ Fall in to three broad groups:
 
 *higher-order matchers*
 
-- take other matchers as input
-
-
+- take other matchers as input, allows you to build up 'composed' matchers that specify the behaviour required.
+- used to match strings and collections(data structures)
 
 *block matchers*
 
