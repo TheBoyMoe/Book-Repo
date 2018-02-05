@@ -105,6 +105,9 @@ When a mock object does not receive the message(s) it is expecting, it raise a '
 
 ```
 
+In these two examples we're checking that a message was or was not sent to the mock, better use for a 'spy', not that some 'side effect' occurred.
+
+
 ### Null Objects
 
 Both stubs and mocks require that you pre-configure them as to the messages they receive and the values they return. A null object is a double which will respond to any message(you can chain multiple methods), without raising an exception, and return itself. Create a null object by calling `as_null_object` on any double.
@@ -124,3 +127,66 @@ Both stubs and mocks require that you pre-configure them as to the messages they
 
 Null objects do nothing, can stand in for anything and can satify any interface. Null objects are useful when testing an object that has multiple collaborators, e.g. a chatbot that interacts with a room and a user. When testing either the room or user, you can use a null object for the chatbot.
 
+
+### Spies
+
+Used when you want to confirm that messages are being received. There are a number of approaches;
+1. use a null object
+
+
+```ruby
+	# Game class
+  class Game
+  	def self.play(character)
+  	  character.jump
+  	end 
+	end
+
+	# define a null object
+  mario = double('Mario').as_null_object
+  #=> #<Double "Mario"> 
+  Game.play(mario)
+  #=> #<Double "Mario"> 
+  expect(mario).to have_received(:jump)
+  #=> nil # if Game.play(mario) had not been called, this would have thrown a 'MockExpectationError' exception
+  expect(mario).not_to have_received(:jump)
+  #=> RSpec::Mocks::MockExpectationError: (Double "Mario").jump(no args)
+  #=>    expected: 0 times with any arguments
+  #=>    received: 1 time
+  # demonstrates that 'jump' was called
+```
+
+2. use a double with an explicit call to `allow`
+
+```ruby
+	# define a double giving it a role
+	mario = double('Mario')
+	#=> #<Double "Mario"> 
+  allow(mario).to receive(:jump)
+  #=> #<RSpec::Mocks::MessageExpectation #<Double "Mario">.jump(any arguments)> 
+  Game.play(mario)
+  #=> nil
+  expect(mario).to have_received(:jump)
+  #=> nil
+  expect(mario).to_not have_received(:jump)
+  #=> RSpec::Mocks::MockExpectationError: (Double "Mario").jump(no args)
+  #=>   expected: 0 times with any arguments
+  #=>   received: 1 time
+	
+```
+
+3. use the rspec `spy` method 
+
+
+```ruby
+	mario = spy('Mario')
+	#=> #<Double "Mario"> 
+	Game.play(mario)
+	#=> #<Double "Mario"> 
+	expect(mario).to have_received(:jump)
+	#=> nil
+  expect(mario).to_not have_received(:jump)
+	#=> RSpec::Mocks::MockExpectationError: (Double "Mario").jump(no args)
+  #=>    expected: 0 times with any arguments
+  #=>    received: 1 time 
+```
