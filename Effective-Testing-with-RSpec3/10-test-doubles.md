@@ -5,6 +5,7 @@ Test doubles, like stunt doubles, stand in fo another object during testing so a
 - use an API that your still designing, allowing you to fix design problems before implemnting them.
 - demonstrate how a component works in relation to it's neighbours
 - makes your tests faster and more resilient
+- RSpec tears down all test doubles after each example, thus they won't 'play' well with RSpec features such as `before(:context)` hooks.
 
 There a several 'types' of doubles:
 
