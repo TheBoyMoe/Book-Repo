@@ -22,8 +22,10 @@ You can explore the different types of double in an IRB session.
 
 Launch IRB and type `rspec/mocks/standalone` (returns true).
 
-```ruby
-	# basic double - acts like an ordinary Ruby object
+### Basic Double
+ 
+```ruby  
+	# - acts like an ordinary Ruby object
   ledger = double #=> #<Double (anonymous)> 
   
   # by default doubles will raise an error to any message sent
@@ -34,6 +36,39 @@ Launch IRB and type `rspec/mocks/standalone` (returns true).
   ledger = double('Ledger') #=> #<Double "Ledger">, object contains the role name
   ledger.record 
   #=> raises an exception, #<Double "Ledger"> received unexpected message :record with (no args)
+```
 
-	
+### Simple Stubs
+  
+Best for when you need to simulate a 'query' method - return a value, but does not produce side effects(modifies some state outside its scope or has an observable interaction with its calling function, e.g. modify a global variable, modify one of it's args, raise an exception, write to a file). 
+
+- to create one, pass two or more args to 'double', 1st is the double role, subsequent args are key/value pairs which specify the method names and their respective return values.
+-such stubs are useful where you're querying a dependency, e.g. database, may/may not perform some computation on the retrieved data and return a result. Your spec can check  the your object's behaviour by looking at the return value.
+
+```ruby
+  http_response = double('HTTPResponse', status: 200, body: 'OK')
+  #=> #<Double "HTTPResponse">
+  
+  # you can do this in separate steps
+  http_response = double('HTTPResponse') 
+  allow​(http_response).to receive_messages(status: 200, body: 'OK')
+  #=> {:status=>200, :body=>"text response"}
+  
+  # or
+  allow​(http_response).to receive(:status).and_return(200)
+  #=> #<RSpec::Mocks::MessageExpectation #<Double "HTTPResponse">.status(any arguments)> 
+  allow​(http_response).to receive(:body).and_return('OK')
+  #=> #<RSpec::Mocks::MessageExpectation #<Double "HTTPResponse">.body(any arguments)> 
+  
+  # usage
+  http_response.status
+	#=> 200
+	http_response.body
+	#=> 'OK'
+  
+  # Simple stubs look for a specific message, and respond with the same value each time, 
+  # no matter what args are passed
+  http_response.status(:one, :two)
+  #=> 200
+  
 ```
