@@ -73,7 +73,7 @@ Best for when you need to simulate a 'query' method - return a value, but does n
   
 ```
 
-### Mocks
+### Mock Objects
 
 Mocks are useful when testing 'command' methods - you don't care about the return value, only the 'side effect', e.g. a method receives an event(chatbot receives a text message), as a result performs some action(decides on the reply), which in turn has a side effect(posts to a chat room). In order to test our method, we need to check that it triggered the side effect of posting to the chat room correctly.
 
@@ -105,8 +105,22 @@ When a mock object does not receive the message(s) it is expecting, it raise a '
 
 ```
 
+### Null Objects
 
+Both stubs and mocks require that you pre-configure them as to the messages they receive and the values they return. A null object is a double which will respond to any message(you can chain multiple methods), without raising an exception, and return itself. Create a null object by calling `as_null_object` on any double.
 
+```ruby
+	account = double('Account').as_null_object
+	
+	# or
+ 	account = double('Account')
+ 	account.as_null_object
+ 	
+ 	#=> #<Double "Account">
+ 	
+	account.withdraw(200)
+	#=> #<Double "Account">	
+```
 
-
+Null objects do nothing, can stand in for anything and can satify any interface. Null objects are useful when testing an object that has multiple collaborators, e.g. a chatbot that interacts with a room and a user. When testing either the room or user, you can use a null object for the chatbot.
 
