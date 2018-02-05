@@ -47,3 +47,47 @@ Note: when using a partial double as a 'spy', your limited to calling messages y
 At the end of each example Ruby will revert the Ruby object back to it's original behaviour - no problem with doubles 'leaking' into other specs.
 
 Note: in irb you need to call `RSpec::Mocks.teardown` to explicitly clean up your partial doubles.
+
+
+### Verifying Doubles
+
+Mocks, stubs and other doubles are often created before the underlying Ruby class exists. A problem then occurs when you change the class in some way, e.g. rename a method, which is not reflected in the specs, your real-world app breaks(trying to call a method that no longer exists) but the specs carry on passing - the change not being picked up. In order to overcome this limitation use the `instance_double` instead of the `double` method when instantiating a double - RSpec checks that the actual Class responds in the way the double is being used.
+
+Note: Although your unit specs would have had a false positive here, your  acceptance specs should catch this sort of regression since they use the real versions of the objects, rather than  counting on test doubles.
+
+```ruby
+	 module ExpenseTracker
+
+   	class Ledger
+   		def record(expense)
+   			
+   		end   	  
+   	end
+   	
+   end
+	
+	ledger = double(ExpenseTracker::Ledger)
+	#=> #<Double ExpenseTracker::Ledger> 
+	allow(ledger).to receive(:record)
+	#=> #<RSpec::Mocks::MessageExpectation #<Double ExpenseTracker::Ledger>.record(any arguments)>
+  allow(ledger).to receive(:record_plus)
+  #=> #<RSpec::Mocks::MessageExpectation #<Double ExpenseTracker::Ledger>.record_plus(any arguments)> 
+ 
+ 	strict_ledger = instance_double(ExpenseTracker::Ledger)
+	#=> #<InstanceDouble(ExpenseTracker::Ledger) (anonymous)> 
+	allow(strict_ledger).to receive(:record)
+	#=> #<RSpec::Mocks::VerifyingMessageExpectation #<InstanceDouble(ExpenseTracker::Ledger) (anonymous)>.record(any arguments)>
+	allow(strict_ledger).to receive(:record_plus)
+	#=> #MockExpectationError: the ExpenseTracker::Ledger class does not implement the instance method: record_plus
+    
+```
+
+Rspec provides a number of methods:
+
+- `instance_double('SomeClass')` - Constrains the double’s interface using the instance methods ofSomeClass 
+
+- `class_double('SomeClass')` - Constrains the double’s interface using the class methods ofSomeClass
+
+- `object_double(some_object)` - Constrains the double’s interface using the methods of some_object,rather than a class; handy for dynamic objects that usemethod_missing.
+
+RSpec also provides `_spy` versions of each of these methods.
