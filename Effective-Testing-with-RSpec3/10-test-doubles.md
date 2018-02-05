@@ -20,7 +20,7 @@ A double ca be an instance of a Ruby object, an object provided by the test fram
 
 You can explore the different types of double in an IRB session. 
 
-Launch IRB and type `rspec/mocks/standalone` (returns true).
+Launch IRB and type `require 'rspec/mocks/standalone'` (returns true).
 
 ### Basic Double
  
@@ -38,7 +38,7 @@ Launch IRB and type `rspec/mocks/standalone` (returns true).
   #=> raises an exception, #<Double "Ledger"> received unexpected message :record with (no args)
 ```
 
-### Simple Stubs
+### Stubs
   
 Best for when you need to simulate a 'query' method - return a value, but does not produce side effects(modifies some state outside its scope or has an observable interaction with its calling function, e.g. modify a global variable, modify one of it's args, raise an exception, write to a file). 
 
@@ -72,3 +72,41 @@ Best for when you need to simulate a 'query' method - return a value, but does n
   #=> 200
   
 ```
+
+### Mocks
+
+Mocks are useful when testing 'command' methods - you don't care about the return value, only the 'side effect', e.g. a method receives an event(chatbot receives a text message), as a result performs some action(decides on the reply), which in turn has a side effect(posts to a chat room). In order to test our method, we need to check that it triggered the side effect of posting to the chat room correctly.
+
+To test this scenario, you would create a double and configure it with a set of messages it's supposed to receive, 'message expectations', declaring them in the same way you would a normal expectation in your specs.
+
+```ruby
+	ledger = double('Ledger')
+	expect(ledger).to receive(:record)
+	#=> #<RSpec::Mocks::MessageExpectation #<Double "Ledger">.record(any arguments)> 
+
+	# Typically at the end of each spec example RSpec verifies that any mock used receives their expected messages, otherwise a 'MockExpectationError' is raised.
+  # In irb you can simulate this by running
+  RSpec::Mocks.verify
+  #=>  RSpec::Mocks::MockExpectationError: (Double "Ledger").record(*(any args))
+	#=>		expected: 1 time with any arguments
+	#=>		received: 0 times with any arguments 	 
+```
+
+When a mock object does not receive the message(s) it is expecting, it raise a 'MockExpectationError', and the spec example fails. You can also negate the `receive` expectation with `not_to` or `to_not` to make sure the mock does not receive a message. It will thus fail if it does.
+
+```ruby
+	expect(ledger).no_to receive(:reset)
+	#=> #<RSpec::Mocks::MessageExpectation #<Double "Ledger">.reset(any arguments)> 
+  
+  ledger.reset
+  #=> RSpec::Mocks::MockExpectationError: (Double "Ledger").reset(no args)
+  #=>    expected: 0 times with any arguments
+  #=>    received: 1 time
+
+```
+
+
+
+
+
+
