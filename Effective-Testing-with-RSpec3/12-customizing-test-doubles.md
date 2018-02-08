@@ -174,3 +174,36 @@ Alternately you can use `no_args`, ensures that no args can be passed to the met
   #=>       got: ("Hail Caesar!")
 ```
 
+You can use RSpec's `hash_including` to specify which keys must be present when dealing with methods that use an options hash of key/value pairs, especially APIs. Specify only the keys which are important.
+
+```ruby
+	class BoxOffice
+		def find_showtime(options)
+		  
+		end
+	end
+	
+	box_office = BoxOffice.new
+
+	expect(box_office).to receive(:find_showtime).with(hash_including(movie: 'Jaws'))
+	
+	box_office.find_showtime(movie: 'Jaws')
+	#=> nil
+	box_office.find_showtime(movie: 'Jaws', director: 'Steven Speilberg')
+	#=> nil
+	box_office.find_showtime(director: 'Steven Speilberg')
+	#=> RSpec::Mocks::MockExpectationError: #<BoxOffice:0x00000000026ffca0> received :find_showtime with unexpected arguments
+  #=>  expected: (hash_including(:movie=>"Jaws"))
+  #=>       got: ({:director=>"Steven Speilberg"})
+```
+
+`hash_including` specifies the keys that must be present. You can also use `hash_excluding` to specify keys that should NOT be present.
+
+`hash_including` also works with Ruby's keyword arguments:
+
+```ruby
+	class BoxOffice
+     def find_movie(title:, director: nil, year: nil)
+     end  
+  end
+```
