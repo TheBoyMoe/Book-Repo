@@ -8,7 +8,7 @@ In such situations you can use a 'partial double'. These add mocking and/or stub
 
 ```ruby
 	# create a random number generator
-  random = Random.new
+  random = Random.new(1)
 	#=> #<Random:0x0000000000bf90a0>
   random.rand #=> 0.12271798938122425
   random.rand #=> 0.7520613454834647 
