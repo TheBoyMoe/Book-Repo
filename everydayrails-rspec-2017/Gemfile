@@ -38,5 +38,5 @@ gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
 gem 'bootstrap-sass'
 gem 'jquery-rails'
 gem 'devise'
-gem 'paperclip'
+gem 'paperclip', '~> 5.2.0'
 gem 'geocoder'
