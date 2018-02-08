@@ -57,5 +57,40 @@ You can yield multiple values to a block by chaining together multiple `and_yiel
 
 ```
 
+**and_raise**
+
+The `and_raise` method mirrors Ruby's raise method
+
+
+```ruby
+	class AnExceptionClass < Exception; end
+	exception_instance = AnExceptionClass.new
+	#=>  #<AnExceptionClass: AnExceptionClass> 
+ 
+  double = double('Exception') 
+	
+	allow(double).to receive(:message).and_raise(exception_instance)
+	#=> #<RSpec::Mocks::MessageExpectation #<Double "Exception">.message(any arguments)>
+	double.message
+	#=> AnExceptionClass: AnExceptionClass
+	
+	allow(double).to receive(:message).and_raise(AnExceptionClass)
+	#=> #<RSpec::Mocks::MessageExpectation #<Double "Exception">.message(any arguments)> 
+  double.message
+  #=> AnExceptionClass: AnExceptionClass
+
+  
+	allow(double).to receive(:message).and_raise('An exception was raised')
+  #=> #<RSpec::Mocks::MessageExpectation #<Double "Exception">.message(any arguments)> 
+  double.message 
+  #=> RuntimeError: An exception was raised
+
+
+	allow(double).to receive(:message).and_raise(exception_instance, 'An exception was raised')
+	#=> #<RSpec::Mocks::MessageExpectation #<Double "Exception">.message(any arguments)> 
+  double.message
+  #=> AnExceptionClass: An exception was raised
+ 
+```
 
 2. Setting constraints
