@@ -93,7 +93,7 @@ The `and_raise` method mirrors Ruby's raise method
 ```
 
 
-2. Setting constraints
+2. Setting constraints on arguments
 
 The test doubles created so far can be called with or without any input. So if you stub a method `my_method` without args, you can then call it with or without args, or pass it a block and RSpec will carry on. You often want to check that methods are being called with the correct args. You can constrain what args a mock will accept by calling `with`.
 
@@ -206,4 +206,49 @@ You can use RSpec's `hash_including` to specify which keys must be present when 
      def find_movie(title:, director: nil, year: nil)
      end  
   end
+```
+
+3. Setting constraints on the number of times and the order in which a method gets called
+
+You can also set a constraint on the number of times a method gets called.
+RSpec provides a number  of modifiers, e.g. `once`, `twice`, `thrice`. You can not combine `at_least` and `at_most`.
+
+
+```ruby
+	client = double('NYTStockTicker')
+	
+	expect​(client).to receive(​:current_price​).exactly(4).times
+	expect​(client).to receive(​:current_price​).twice.and_raise(Timeout::Error)
+	expect​(client).to receive(​:current_price​).at_least(3).times
+	​expect​(client).to receive(​:current_price​).at_most(10).times
+	expect​(client).to receive(​:current_price​).at_least(​:once​)
+	
+	expect​(client).to receive(​:current_price​).at_most(​:twice).and_return('$120.0')
+	client.current_price
+	#=> '$120'
+	client.current_price
+	#=> '$120'
+	client.current_price
+	#=> RSpec::Mocks::MockExpectationError: (Double "NYTStockTicker").current_price(no args)
+  #=>    expected: at most 2 times with any arguments
+  #=>    received: 3 times
+```
+
+Ordinarily you can call methods in any order, you don't have to call methods in the order the expectations are written. To enforce a specific order, use the `ordered` modifier.
+
+```ruby
+	greeter = double('Greeter')
+	​expect​(greeter).to receive(​:hello​).ordered
+	expect​(greeter).to receive(​:goodbye​).ordered
+	
+	# will fail
+  greeter.goodbye
+  greeter.hello 
+```
+
+You can combine arguments, call count and ordering:
+
+```ruby
+	catalog = double('Catalog')
+	expect​(catalog).to receive(​:search​).with(​/term/​).at_least(​:twice​).ordered
 ```
