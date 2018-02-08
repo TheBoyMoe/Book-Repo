@@ -90,7 +90,87 @@ The `and_raise` method mirrors Ruby's raise method
 	#=> #<RSpec::Mocks::MessageExpectation #<Double "Exception">.message(any arguments)> 
   double.message
   #=> AnExceptionClass: An exception was raised
- 
 ```
 
+
 2. Setting constraints
+
+The test doubles created so far can be called with or without any input. So if you stub a method `my_method` without args, you can then call it with or without args, or pass it a block and RSpec will carry on. You often want to check that methods are being called with the correct args. You can constrain what args a mock will accept by calling `with`.
+
+```ruby
+	movie = double('Movie')
+	
+	# you can use `expect` or `allow`
+	expect(movie).to receive(:fetch).with('Hail Caesar!')
+	#=> #<RSpec::Mocks::MessageExpectation #<Double "Movie">.fetch("Hail Caesar!")> 
+  movie.fetch
+  #=> RSpec::Mocks::MockExpectationError: #<Double "Movie"> received :fetch with unexpected arguments
+  #=>  expected: ("Hail Caesar!")
+  #=>       got: (no args)
+ 	
+ 	movie.fetch('x-men')
+ 	#=> RSpec::Mocks::MockExpectationError: #<Double "Movie"> received :fetch with unexpected arguments
+  #=>   expected: ("Hail Caesar!")
+  #=>        got: ("x-men")
+	
+	movie.fetch('Hail Caesar!')
+	#=> nil
+ 
+  expect(movie).to receive(:fetch).with(/Hail Caesar!/)
+  expect(movie).to receive(:fetch).with('Hail Caesar!', 5)
+```
+ 
+When a method takes several arguments, you may want to place a constraint on one or some of them. Use the `anything` placeholder for any args you do not wish to constrain. You still need to pass the same number of arguments in'
+
+```ruby
+	contact = double('Contact')
+	expect(contact).to receive(:add_details).with('John Smith', anything, anything)
+	#=> #<RSpec::Mocks::MessageExpectation #<Double "Contact">.add_details("John Smith", anything, anything)> 
+  
+  contact.add_details('John Smith')
+	#=> RSpec::Mocks::MockExpectationError: #<Double "Contact"> received :add_details with unexpected arguments
+  #=>  expected: ("John Smith", anything, anything)
+  #=>       got: ("John Smith") 
+  
+  contact.add_details('Marge Smith', 'the town', '123456')
+ 	#=> RSpec::Mocks::MockExpectationError: #<Double "Contact"> received :add_details with unexpected arguments
+  #=>   expected: ("John Smith", anything, anything)
+  #=>        got: ("Marge Smith", "the town", "123456")
+
+  contact.add_details('John Smith', 'the town', '123456')
+  #=> nil 
+```
+
+Where you have a sequence of `anything` placeholders, you can replace them with `any_args` 
+
+```ruby
+	expect(movie).to receive(:add_rating).with('Hail Caesar', any_args)
+	#=> #<RSpec::Mocks::MessageExpectation #<Double "Movie">.add_rating("Hail Caesar", *(any args))> 
+  
+  movie.add_rating('Hail Caesar', 5)
+	#=> nil
+  movie.add_rating('Hail Caesar') # pass 0 or more args
+  #=> nil
+  movie.add_rating('Hail Maximus', 5)
+  #=> RSpec::Mocks::MockExpectationError: #<Double "Movie"> received :add_rating with unexpected arguments
+   #=>   expected: ("Hail Caesar", *(any args))
+   #=>       got: ("Hail Maximus", 5)
+```
+
+`any_args` operates like the 'splat', `*`, operator in Ruby.
+
+Alternately you can use `no_args`, ensures that no args can be passed to the method
+
+```ruby
+	expect(movie).to receive(:get_review).with(no_args).and_return('Loved it!')
+	#=> #<RSpec::Mocks::MessageExpectation #<Double "Movie">.get_review(no arguments)> 
+ 
+  movie.get_review
+	#=> "Loved it!" 
+  
+  movie.get_review('Hail Caesar!')
+  #=> RSpec::Mocks::MockExpectationError: #<Double "Movie"> received :get_review with unexpected arguments
+  #=>  expected: (no args)
+  #=>       got: ("Hail Caesar!")
+```
+
