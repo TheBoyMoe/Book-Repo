@@ -8,11 +8,22 @@ RSpec.describe Project, type: :model do
 				email: 'joe@ex.com',
 				password: 'password'
 		)
-		@user.projects.create(name: 'Web Development with Rails')
+		@project = @user.projects.create(name: 'Web Development with Rails')
 	}
 
+	it 'is valid with a project name and a user' do
+		expect(@project).to be_valid
+	end
+
+	it 'is invalid without a project name' do
+		project = @user.projects.build(name: nil)
+		project.valid?
+
+		expect(project.errors[:name]).to include("can't be blank")
+	end
+
 	it 'does not allow duplicate project names per user' do
-		duplicate = @user.projects.build(name: 'Web Development with Rails')
+		duplicate = @user.projects.build(name: @project.name)
 		duplicate.valid?
 
 		expect(duplicate.errors[:name]).to include('has already been taken')
@@ -25,7 +36,7 @@ RSpec.describe Project, type: :model do
 				email: 'tom@ex.com',
 				password: 'password'
 		)
-		other_project = other_user.projects.build(name: 'Web Development with Rails')
+		other_project = other_user.projects.build(name: @project.name)
 
 		expect(other_project).to be_valid
 	end
