@@ -1,14 +1,9 @@
 require 'rails_helper'
 
 RSpec.describe Project, type: :model do
+
 	before {
-		@user = User.create(
-				first_name: 'Joe',
-				last_name: 'Smith',
-				email: 'joe@ex.com',
-				password: 'password'
-		)
-		@project = @user.projects.create(name: 'Web Development with Rails')
+		@project = FactoryBot.create(:project)
 	}
 
 	it 'is valid with a project name and a owner' do
@@ -16,36 +11,34 @@ RSpec.describe Project, type: :model do
 	end
 
 	context 'is invalid without a' do
-		before {
-			@project = Project.new(name: nil)
-			@project.valid?
-		}
 
 		it 'project name' do
-			expect(@project.errors[:name]).to include("can't be blank")
+			project = FactoryBot.build(:project, name: nil)
+			project.valid?
+
+			expect(project.errors[:name]).to include("can't be blank")
 		end
 
 		it 'owner' do
-			expect(@project.errors[:owner]).to include('must exist')
+			project = FactoryBot.build(:project, owner: nil)
+			project.valid?
+
+			expect(project.errors[:owner]).to include('must exist')
 		end
 
 	end
 
 	it 'does not allow duplicate project names per user' do
-		duplicate = @user.projects.build(name: @project.name)
+		# create a project with the same name and owner
+		duplicate = FactoryBot.build(:project, name: @project.name, owner: @project.owner)
 		duplicate.valid?
 
 		expect(duplicate.errors[:name]).to include('has already been taken')
 	end
 
 	it 'allows two users to share a project name' do
-		other_user = User.create(
-				first_name: 'Tom',
-				last_name: 'Smith',
-				email: 'tom@ex.com',
-				password: 'password'
-		)
-		other_project = other_user.projects.build(name: @project.name)
+		other_user = FactoryBot.create(:user)
+		other_project = FactoryBot.create(:project, name: @project.name, owner: other_user)
 
 		expect(other_project).to be_valid
 	end
