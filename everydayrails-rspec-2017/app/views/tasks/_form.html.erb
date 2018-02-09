@@ -1,12 +1,12 @@
 <%= form_with(model: [task.project, task]) do |f| %>
   <% if task.errors.any? %>
-    <div id="error_explanation">
-      <h2><%= pluralize(task.errors.count, "error") %> prohibited this task from being saved:</h2>
-
+    <div id="error_explanation" class="alert alert-danger">
+      <a href="#" data-dismiss="alert" class="close">×</a>
+      <p><strong><%= pluralize(task.errors.count, "error") %> prohibited this task from being saved:</strong></p>
       <ul>
-      <% task.errors.full_messages.each do |message| %>
-        <li><%= message %></li>
-      <% end %>
+        <% task.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
       </ul>
     </div>
   <% end %>

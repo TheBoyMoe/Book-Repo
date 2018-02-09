@@ -1,12 +1,12 @@
 <%= form_with(model: [note.project, note], local: true, multipart: true) do |f| %>
   <% if note.errors.any? %>
-    <div id="error_explanation">
-      <h2><%= pluralize(note.errors.count, "error") %> prohibited this note from being saved:</h2>
-
+    <div id="error_explanation" class="alert alert-danger">
+      <a href="#" data-dismiss="alert" class="close">×</a>
+      <p><strong><%= pluralize(note.errors.count, "error") %> prohibited this note from being saved:</strong></p>
       <ul>
-      <% note.errors.full_messages.each do |message| %>
-        <li><%= message %></li>
-      <% end %>
+        <% note.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
       </ul>
     </div>
   <% end %>
