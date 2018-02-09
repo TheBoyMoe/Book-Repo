@@ -11,15 +11,24 @@ RSpec.describe Project, type: :model do
 		@project = @user.projects.create(name: 'Web Development with Rails')
 	}
 
-	it 'is valid with a project name and a user' do
+	it 'is valid with a project name and a owner' do
 		expect(@project).to be_valid
 	end
 
-	it 'is invalid without a project name' do
-		project = @user.projects.build(name: nil)
-		project.valid?
+	context 'is invalid without a' do
+		before {
+			@project = Project.new(name: nil)
+			@project.valid?
+		}
 
-		expect(project.errors[:name]).to include("can't be blank")
+		it 'project name' do
+			expect(@project.errors[:name]).to include("can't be blank")
+		end
+
+		it 'owner' do
+			expect(@project.errors[:owner]).to include('must exist')
+		end
+
 	end
 
 	it 'does not allow duplicate project names per user' do
