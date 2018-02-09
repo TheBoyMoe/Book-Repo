@@ -1,5 +1,5 @@
 FactoryBot.define do
-  factory :user do
+  factory :user, aliases: [:owner] do
     first_name 'Tom'
     last_name 'Smith'
 		# create unique email address for each user
