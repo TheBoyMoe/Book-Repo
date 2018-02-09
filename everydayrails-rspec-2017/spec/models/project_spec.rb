@@ -11,19 +11,17 @@ RSpec.describe Project, type: :model do
 	end
 
 	context 'is invalid without a' do
+		before {
+			@project = FactoryBot.build(:project, name: nil, owner: nil)
+			@project.valid?
+		}
 
 		it 'project name' do
-			project = FactoryBot.build(:project, name: nil)
-			project.valid?
-
-			expect(project.errors[:name]).to include("can't be blank")
+			expect(@project.errors[:name]).to include("can't be blank")
 		end
 
 		it 'owner' do
-			project = FactoryBot.build(:project, owner: nil)
-			project.valid?
-
-			expect(project.errors[:owner]).to include('must exist')
+			expect(@project.errors[:owner]).to include('must exist')
 		end
 
 	end
