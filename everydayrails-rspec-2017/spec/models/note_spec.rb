@@ -18,11 +18,23 @@ RSpec.describe Note, type: :model do
 		expect(note).to be_valid
 	end
 
-	it 'is invalid without a message' do
-		note = Note.new(message: nil)
-		note.valid?
+	context 'is invalid without a' do
+		before {
+      @note = Note.new(message: nil)
+      @note.valid?
+    }
 
-		expect(note.errors[:message]).to include("can't be blank")
+		it 'message' do
+      expect(@note.errors[:message]).to include("can't be blank")
+		end
+
+		it 'project' do
+      expect(@note.errors[:project]).to include("must exist")
+		end
+
+		it 'user' do
+      expect(@note.errors[:user]).to include("must exist")
+    end
 	end
 
   # use describe to outline general functionality or feature
