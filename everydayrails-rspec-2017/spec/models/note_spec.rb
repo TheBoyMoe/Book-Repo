@@ -2,25 +2,21 @@ require 'rails_helper'
 
 RSpec.describe Note, type: :model do
 
-	before {
-    @user = User.create(
-        first_name: 'Joe',
-        last_name: 'Smith',
-        email: 'joe@ex.com',
-        password: 'password'
-    )
-    @project = @user.projects.create(name: 'project 1')
-  }
+	# DEBUG test that the correct factory instances/associations are created
+	it 'generates associated data from a factory' do
+		note = FactoryBot.create(:note)
+		puts "project: #{note.project.inspect}"
+		puts "user: #{note.user.inspect}"
+	end
 
 	it 'is valid with a user, project and message' do
-		note = Note.create(message: 'New Note', user: @user, project: @project)
-
+		note = FactoryBot.create(:note)
 		expect(note).to be_valid
 	end
 
 	context 'is invalid without a' do
 		before {
-      @note = Note.new(message: nil)
+      @note = FactoryBot.build(:note, message: nil, project: nil, user: nil)
       @note.valid?
     }
 
@@ -40,9 +36,9 @@ RSpec.describe Note, type: :model do
   # use describe to outline general functionality or feature
   describe 'search note for a term' do
     before {
-      @note_1 = @project.notes.create(message: 'note 1, with some dummy text', user: @user)
-      @note_2 = @project.notes.create(message: 'note 2, with even more text', user: @user)
-      @note_3 = @project.notes.create(message: 'note 3, just add the dummy', user: @user)
+			@note_1 = FactoryBot.create(:note, message: 'note 1, with some dummy text')
+			@note_2 = FactoryBot.create(:note, message: 'note 2, with even more text')
+			@note_3 = FactoryBot.create(:note, message: 'note 3, just add the dummy')
     }
 
     # use context to outline a specific state

@@ -21,10 +21,11 @@ module Projects
     # helper/routing_specs -> test in larger apps
     config.generators do |generator|
       generator.test_framework :rspec,
-         fixtures: false,
+         # fixtures: false, # create factory_specs for models
          view_specs: false,
          helper_specs: false,
-         routing_specs: false
+         routing_specs: false,
+         request_specs: false
     end
   end
 end

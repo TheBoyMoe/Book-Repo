@@ -1,14 +1,9 @@
 require 'rails_helper'
 
 RSpec.describe Project, type: :model do
+
 	before {
-		@user = User.create(
-				first_name: 'Joe',
-				last_name: 'Smith',
-				email: 'joe@ex.com',
-				password: 'password'
-		)
-		@project = @user.projects.create(name: 'Web Development with Rails')
+		@project = FactoryBot.create(:project)
 	}
 
 	it 'is valid with a project name and a owner' do
@@ -17,7 +12,7 @@ RSpec.describe Project, type: :model do
 
 	context 'is invalid without a' do
 		before {
-			@project = Project.new(name: nil)
+			@project = FactoryBot.build(:project, name: nil, owner: nil)
 			@project.valid?
 		}
 
@@ -31,22 +26,44 @@ RSpec.describe Project, type: :model do
 
 	end
 
-	it 'does not allow duplicate project names per user' do
-		duplicate = @user.projects.build(name: @project.name)
-		duplicate.valid?
+	context 'names may' do
+		it 'not be repeated by the same user' do
+			# create a project with the same name and owner
+			duplicate = FactoryBot.build(:project, name: @project.name, owner: @project.owner)
+			duplicate.valid?
 
-		expect(duplicate.errors[:name]).to include('has already been taken')
+			expect(duplicate.errors[:name]).to include('has already been taken')
+		end
+
+		it 'be repeated by different users' do
+			other_user = FactoryBot.create(:user)
+			other_project = FactoryBot.create(:project, name: @project.name, owner: other_user)
+
+			expect(other_project).to be_valid
+		end
 	end
 
-	it 'allows two users to share a project name' do
-		other_user = User.create(
-				first_name: 'Tom',
-				last_name: 'Smith',
-				email: 'tom@ex.com',
-				password: 'password'
-		)
-		other_project = other_user.projects.build(name: @project.name)
+	context 'late status' do
+		it 'is late when the due date is past today' do
+			project = FactoryBot.create(:project_due_yesterday)
+			expect(project).to be_late
+		end
 
-		expect(other_project).to be_valid
+		it 'is on time when the due date is today' do
+			project = FactoryBot.create(:project_due_today)
+			expect(project).to_not be_late
+		end
+
+		it 'is on time when the due date is in the future' do
+			project = FactoryBot.create(:project_due_tomorrow)
+			expect(project).to_not be_late
+		end
 	end
+
+	it 'can have many notes' do
+		# create the factory instance, calling the 'with_notes' trait
+		project = FactoryBot.create(:project, :with_notes)
+		expect(project.notes.count).to eq 5
+	end
+
 end
