@@ -1,6 +1,7 @@
 FactoryBot.define do
 
   factory :project do
+		# default attributes
     sequence(:name){|i| "Project #{i}"}
 		description "Sample project ......."
 		due_on 1.week.from_now
@@ -21,6 +22,11 @@ FactoryBot.define do
 		end
 	end
 
+	# wrap callback(perform additional actions on a factory-generated object) in a 'trait'
+	# add a list of 5 notes to the project after its creation
+	trait :with_notes do
+		after(:create){|project| create_list(:note, 5, project: project)}
+	end
 
 	# define multiple factories each with different names, representing the same class
 	# factory :project_due_yesterday, class: Project do

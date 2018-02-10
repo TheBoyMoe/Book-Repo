@@ -27,7 +27,7 @@ RSpec.describe Project, type: :model do
 	end
 
 	context 'names may' do
-		it 'not be repeated by a user' do
+		it 'not be repeated by the same user' do
 			# create a project with the same name and owner
 			duplicate = FactoryBot.build(:project, name: @project.name, owner: @project.owner)
 			duplicate.valid?
@@ -58,6 +58,12 @@ RSpec.describe Project, type: :model do
 			project = FactoryBot.create(:project_due_tomorrow)
 			expect(project).to_not be_late
 		end
+	end
+
+	it 'can have many notes' do
+		# create the factory instance, calling the 'with_notes' trait
+		project = FactoryBot.create(:project, :with_notes)
+		expect(project.notes.count).to eq 5
 	end
 
 end
