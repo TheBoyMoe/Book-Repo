@@ -26,18 +26,20 @@ RSpec.describe Project, type: :model do
 
 	end
 
-	it 'does not allow duplicate project names per user' do
-		# create a project with the same name and owner
-		duplicate = FactoryBot.build(:project, name: @project.name, owner: @project.owner)
-		duplicate.valid?
+	context 'names may' do
+		it 'not be repeated by a user' do
+			# create a project with the same name and owner
+			duplicate = FactoryBot.build(:project, name: @project.name, owner: @project.owner)
+			duplicate.valid?
 
-		expect(duplicate.errors[:name]).to include('has already been taken')
-	end
+			expect(duplicate.errors[:name]).to include('has already been taken')
+		end
 
-	it 'allows two users to share a project name' do
-		other_user = FactoryBot.create(:user)
-		other_project = FactoryBot.create(:project, name: @project.name, owner: other_user)
+		it 'be repeated by different users' do
+			other_user = FactoryBot.create(:user)
+			other_project = FactoryBot.create(:project, name: @project.name, owner: other_user)
 
-		expect(other_project).to be_valid
+			expect(other_project).to be_valid
+		end
 	end
 end
