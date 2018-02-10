@@ -84,11 +84,23 @@ RSpec.describe ProjectsController, type: :controller do
 				@user = FactoryBot.create(:user)
 			}
 
-			it 'add a project' do
-				sign_in @user
-				expect {
-					post :create, params: {project: @project_params}
-				}.to change(@user.projects, :count).by(1)
+			context 'with valid attributes' do
+				it 'add a project' do
+					sign_in @user
+					expect {
+						post :create, params: {project: @project_params}
+					}.to change(@user.projects, :count).by(1)
+				end
+			end
+
+			context 'with invalid attributes' do
+				it 'does not add a project' do
+					project_params = FactoryBot.attributes_for(:project, :invalid_attributes)
+					sign_in @user
+					expect {
+						post :create, params: {project: project_params}
+					}.to_not change(@user.projects, :count)
+				end
 			end
 		end
 
@@ -115,16 +127,27 @@ RSpec.describe ProjectsController, type: :controller do
 			before {
 				# create the user and assign the project to that user
 				@user = FactoryBot.create(:user)
-				@project = FactoryBot.create(:project, owner: @user)
+				@project = FactoryBot.create(:project, owner: @user, name: 'Old Project Name')
 			}
 
-			it 'updates a project' do
-				# update the project name
-				project_params = FactoryBot.attributes_for(:project, name: 'New Project Name')
-				sign_in @user
-				patch :update, params: {id: @project.id, project: project_params}
-				# refresh the value in memory with that in the database before checking
-				expect(@project.reload.name).to eq 'New Project Name'
+			context 'with valid attributes' do
+				it 'updates a project' do
+					# update the project name
+					project_params = FactoryBot.attributes_for(:project, name: 'New Project Name')
+					sign_in @user
+					patch :update, params: {id: @project.id, project: project_params}
+					# refresh the value in memory with that in the database before checking
+					expect(@project.reload.name).to eq 'New Project Name'
+				end
+			end
+
+			context 'with invalid attributes' do
+				it 'does not update the project' do
+					project_params = FactoryBot.attributes_for(:project, :invalid_attributes)
+					sign_in @user
+					patch :update, params: {id: @project.id, project: project_params}
+					expect(@project.reload.name).to eq 'Old Project Name'
+				end
 			end
 		end
 

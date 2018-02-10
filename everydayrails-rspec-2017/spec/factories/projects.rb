@@ -22,6 +22,10 @@ FactoryBot.define do
 		end
 	end
 
+	trait :invalid_attributes do
+		name nil
+	end
+
 	# wrap callback(perform additional actions on a factory-generated object) in a 'trait'
 	# add a list of 5 notes to the project after its creation
 	trait :with_notes do
