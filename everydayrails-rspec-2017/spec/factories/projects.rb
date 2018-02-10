@@ -11,7 +11,7 @@ FactoryBot.define do
 	factory :project_due_yesterday, class: Project do
 		sequence(:name){|i| "Test project #{i}"}
 		description "Sample project - due yesterday"
-		due_on 1.day_ago
+		due_on 1.day.ago
 		association :owner
 	end
 
