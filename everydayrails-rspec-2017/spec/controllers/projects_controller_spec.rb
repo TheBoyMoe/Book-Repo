@@ -73,4 +73,39 @@ RSpec.describe ProjectsController, type: :controller do
 		end
 	end
 
+	describe '#create' do
+		before {
+			# generate a params hash of project key/value pairs
+			@project_params = FactoryBot.attributes_for(:project)
+		}
+
+		context 'as an authenticated user' do
+			before {
+				@user = FactoryBot.create(:user)
+			}
+
+			it 'add a project' do
+				sign_in @user
+				expect {
+					post :create, params: {project: @project_params}
+				}.to change(@user.projects, :count).by(1)
+			end
+		end
+
+		context 'as a guest' do
+			before {
+				post :create, params: {project: @project_params}
+			}
+
+			it 'returns a 302 response' do
+				expect(response).to have_http_status 302
+			end
+
+			it 'redirects to the sign in page' do
+				expect(response).to redirect_to '/users/sign_in'
+			end
+		end
+
+	end
+
 end
