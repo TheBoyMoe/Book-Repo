@@ -108,4 +108,64 @@ RSpec.describe ProjectsController, type: :controller do
 
 	end
 
+	describe '#update' do
+
+		# can edit their own
+		context 'as an authorised user' do
+			before {
+				# create the user and assign the project to that user
+				@user = FactoryBot.create(:user)
+				@project = FactoryBot.create(:project, owner: @user)
+			}
+
+			it 'updates a project' do
+				# update the project name
+				project_params = FactoryBot.attributes_for(:project, name: 'New Project Name')
+				sign_in @user
+				patch :update, params: {id: @project.id, project: project_params}
+				# refresh the value in memory with that in the database before checking
+				expect(@project.reload.name).to eq 'New Project Name'
+			end
+		end
+
+		# can not edit other users projects
+		context 'as an unauthorised user' do
+			before {
+				user = FactoryBot.create(:user)
+				other_user = FactoryBot.create(:user)
+				@project = FactoryBot.create(:project, name: 'Other Users Project', owner: other_user)
+				sign_in user
+				project_params = FactoryBot.attributes_for(:project, name: 'New Project Name')
+				patch :update, params: {id: @project.id, project: project_params}
+			}
+
+			it 'does not update the project' do
+				expect(@project.reload.name).to eq 'Other Users Project'
+			end
+
+			it 'redirects to the dashboard' do
+				expect(response).to redirect_to root_path
+			end
+		end
+
+		# prevented from update
+		context 'as a guest' do
+			before {
+				project = FactoryBot.create(:project)
+				project_params = FactoryBot.attributes_for(:project, name: 'My Own Project Name')
+				patch :update, params: {id: project.id, params: project_params}
+			}
+
+			it 'returns a 302 response' do
+				expect(response).to have_http_status 302
+			end
+
+			it 'redirects to the sign in page' do
+				expect(response).to redirect_to '/users/sign_in'
+			end
+
+		end
+
+	end
+
 end
