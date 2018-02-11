@@ -144,4 +144,31 @@ RSpec.describe NotesController, type: :controller do
 		end
 	end
 
+	describe '#edit' do
+		context 'as an authenticated user' do
+			context 'who is authorised' do
+				it 'renders edit view' do
+					sign_in @user
+					get :edit, params: {project_id: @project.id, id: @note}
+					expect(response).to render_template 'edit'
+				end
+			end
+
+			context 'who is not authorised' do
+				it 'redirects to the dashboard' do
+					sign_in @other_user
+					get :edit, params: {project_id: @project.id, id: @note.id}
+					expect(response).to redirect_to root_path
+				end
+			end
+		end
+
+		context 'as a guest' do
+			it 'redirects to sign in page' do
+				get :edit, params: {project_id: @project.id, id: @note.id}
+				expect(response).to redirect_to '/users/sign_in'
+			end
+		end
+	end
+
 end

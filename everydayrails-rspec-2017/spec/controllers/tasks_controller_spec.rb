@@ -176,7 +176,13 @@ RSpec.describe TasksController, type: :controller do
 				end
 			end
 
-			context 'who is unauthorised'
+			context 'who is unauthorised' do
+				it 'redirects to the dashboard' do
+					sign_in @other_user
+					get :edit, params: {project_id: @project.id, id: @task.id}
+					expect(response).to redirect_to root_path
+				end
+			end
 
 		end
 
