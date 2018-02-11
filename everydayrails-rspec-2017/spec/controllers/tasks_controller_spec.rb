@@ -79,6 +79,29 @@ RSpec.describe TasksController, type: :controller do
 		end
 	end
 
+	describe '#new' do
+		context 'as an authenticated user' do
+			before {
+				sign_in @user
+				get :new, params: {project_id: @project.id}
+			}
+			it 'returns a http status of 200' do
+				expect(response).to have_http_status 200
+			end
+
+			it 'renders the new view' do
+				expect(response).to render_template('new')
+			end
+		end
+
+		context 'as a guest' do
+			it 'redirects to the sign in page' do
+				get :new, params: {project_id: @project.id}
+				expect(response).to redirect_to '/users/sign_in'
+			end
+		end
+	end
+
 	describe '#create' do
 		before {
 			@new_task = {name: 'New task'}
