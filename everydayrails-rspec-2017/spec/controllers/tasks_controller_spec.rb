@@ -46,16 +46,36 @@ RSpec.describe TasksController, type: :controller do
 	end
 
 	describe '#show' do
-		it 'responds with json formatted data' do
-			sign_in @user
-			get :show, format: :json, params: {id: @task.id, project_id: @project.id}
-			expect(response.content_type).to eq 'application/json'
+
+		context 'as an authenticated user' do
+			context 'as an authorised user' do
+				it 'responds with json formatted data' do
+					sign_in @user
+					get :show, format: :json, params: {project_id: @project.id, id: @task.id}
+					expect(response.content_type).to eq 'application/json'
+				end
+
+				it 'responds with text/html formatted data' do
+					sign_in @user
+					get :show, params: {project_id: @project.id, id: @task.id}
+					expect(response.content_type).to eq 'text/html'
+				end
+			end
+
+			context 'as an unauthorised user' do
+				it 'redirects to the dashboard' do
+					sign_in @other_user
+					get :show, params: {project_id: @project.id, id: @task.id}
+					expect(response).to redirect_to root_path
+				end
+			end
 		end
 
-		it 'responds with text/html formatted data' do
-			sign_in @user
-			get :show, params: {id: @task.id, project_id: @project.id}
-			expect(response.content_type).to eq 'text/html'
+		context 'as a guest user' do
+			it 'redirects to the sign in page' do
+				get :show, params: {project_id: @project.id, id: @task.id}
+				expect(response).to redirect_to '/users/sign_in'
+			end
 		end
 	end
 
