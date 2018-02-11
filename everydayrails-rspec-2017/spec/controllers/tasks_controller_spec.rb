@@ -6,7 +6,44 @@ RSpec.describe TasksController, type: :controller do
 		@user = FactoryBot.create(:user)
 		@project = FactoryBot.create(:project, owner: @user)
 		@task = @project.tasks.create!(name: 'Test task')
+		@other_user = FactoryBot.create(:user, first_name: 'Sam')
 	}
+
+	describe '#index' do
+
+		context 'as an authenticated user' do
+
+			context 'as an authorised user' do
+				it 'returns the project tasks as json data' do
+					sign_in @user
+					get :index, format: :json, params: {project_id: @project.id}
+					expect(response.content_type).to eq 'application/json'
+				end
+			end
+
+			context 'as an unauthorised user' do
+				it 'redirects to the dashboard' do
+					sign_in @other_user
+					get :index, format: :json, params: {project_id: @project.id}
+					expect(response).to redirect_to root_path
+				end
+			end
+		end
+
+		context 'as a guest' do
+			before {
+				get :index, params: {project_id: @project.id}
+			}
+
+			it 'returns a response status of 302' do
+				expect(response).to have_http_status 302
+			end
+
+			it 'redirects to the sign in page' do
+				expect(response).to redirect_to '/users/sign_in'
+			end
+		end
+	end
 
 	describe '#show' do
 		it 'responds with json formatted data' do
