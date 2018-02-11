@@ -225,12 +225,52 @@ RSpec.describe NotesController, type: :controller do
 		end
 
 		context 'as a guest user' do
-			it 'does not update note' do
+			before {
+				note_params = {message: 'Guest users note'}
+				post :update, params: {project_id: @project.id, id: @note.id, note: note_params}
+			}
 
+			it 'does not update note' do
+				expect(@note.reload.message).to eq('Test message')
 			end
 
 			it 'redirects to the sign in page' do
+				expect(response).to redirect_to '/users/sign_in'
+			end
+		end
+	end
 
+	describe '#destroy' do
+		context 'as an authenticated user' do
+			context 'who is authorised' do
+				it 'deletes the note' do
+					sign_in @user
+					expect {
+						delete :destroy, params: {project_id: @project.id, id: @note.id}
+					}.to change(@project.notes, :count).by(-1)
+				end
+			end
+
+			context 'who is not authorised' do
+				it 'does not delete the note' do
+					sign_in @other_user
+					expect {
+						delete :destroy, params: {project_id: @project.id, id: @note.id}
+					}.to_not change(@project.notes, :count)
+				end
+			end
+		end
+
+		context 'as a guest' do
+			it 'does not delete the note' do
+				expect {
+					delete :destroy, params: {project_id: @project.id, id: @note.id}
+				}.to_not change(@project.notes, :count)
+			end
+
+			it 'redirects to the sign in page' do
+				delete :destroy, params: {project_id: @project.id, id: @note.id}
+				expect(response).to redirect_to '/users/sign_in'
 			end
 		end
 	end
