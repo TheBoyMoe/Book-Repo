@@ -73,6 +73,37 @@ RSpec.describe ProjectsController, type: :controller do
 		end
 	end
 
+	describe '#new' do
+		context 'as an authenticated user' do
+			before{
+				@user = FactoryBot.create(:user)
+				sign_in @user
+				get :new
+			}
+
+			it 'responds with a 200 status' do
+				expect(response).to have_http_status(200)
+			end
+
+			it 'renders the new template' do
+				expect(response).to render_template('new')
+			end
+
+		end
+
+		context 'as a guest' do
+			before { get :new }
+
+			it 'responds with a 302 status' do
+				expect(response).to have_http_status(302)
+			end
+
+			it 'redirects to the sign in page' do
+				expect(response).to redirect_to '/users/sign_in'
+			end
+		end
+	end
+
 	describe '#create' do
 		before {
 			# generate a params hash of project key/value pairs
@@ -249,5 +280,7 @@ RSpec.describe ProjectsController, type: :controller do
 			end
 		end
 	end
+
+
 
 end

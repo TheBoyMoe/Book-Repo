@@ -22,7 +22,6 @@ group :development, :test do
   gem 'selenium-webdriver'
 	gem 'rspec-rails', '~> 3.6.0'
   gem 'factory_bot_rails', '~> 4.8', '>= 4.8.2'
-  gem 'simplecov', require: false
 end
 
 group :development do
@@ -33,6 +32,11 @@ group :development do
   gem 'spring-commands-rspec', '~> 1.0', '>= 1.0.4'
   gem 'faker', require: false # for sample data in development
 
+end
+
+group :test do
+  gem 'simplecov', require: false
+  gem 'rails-controller-testing'
 end
 
 gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
