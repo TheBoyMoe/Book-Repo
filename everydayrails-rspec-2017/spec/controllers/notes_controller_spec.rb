@@ -63,5 +63,32 @@ RSpec.describe NotesController, type: :controller do
 		end
 	end
 
+	describe '#new' do
+		context 'as an authenticated user' do
+			context 'who is authorised' do
+				before {
+					sign_in @user
+					get :new, params: {project_id: @project.id}
+				}
+				it 'returns http status 200' do
+					expect(response).to have_http_status 200
+				end
 
+				it 'renders new view' do
+					expect(response).to render_template('new')
+				end
+			end
+
+			context 'who is not authorised' do
+
+			end
+		end
+
+		context 'as a guest' do
+			it 'redirects to the sign in page' do
+				get :new, params: {project_id: @project.id}
+				expect(response).to redirect_to '/users/sign_in'
+			end
+		end
+	end
 end
