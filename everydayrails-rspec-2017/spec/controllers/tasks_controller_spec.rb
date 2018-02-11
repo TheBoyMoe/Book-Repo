@@ -89,19 +89,38 @@ RSpec.describe TasksController, type: :controller do
 				sign_in @user
 			}
 
-			it 'responds with JSON formatted output' do
-				post :create, format: :json, params: {project_id: @project.id, task: @new_task}
-				expect(response.content_type).to eq 'application/json'
+			context 'with valid data' do
+				it 'responds with JSON formatted output' do
+					post :create, format: :json, params: {project_id: @project.id, task: @new_task}
+					expect(response.content_type).to eq 'application/json'
+				end
+
+				it 'adds a new task to the project' do
+					expect {
+						post :create, format: :json, params: {project_id: @project.id, task: @new_task}
+					}.to change(@project.tasks, :count).by(1)
+				end
 			end
 
-			it 'adds a new task to the project' do
-				expect {
-					post :create, format: :json, params: {project_id: @project.id, task: @new_task}
-				}.to change(@project.tasks, :count).by(1)
+			context 'with invalid data' do
+				before {
+					@task_params = FactoryBot.attributes_for(:task, name: nil)
+				}
+
+				it 'does not add the task' do
+					expect {
+						post :create, params: {project_id: @project.id, task: @task_params}
+					}.to_not change(@project.tasks, :count)
+				end
+
+				it 'renders the new view' do
+					post :create, params: {project_id: @project.id, task: @task_params}
+					expect(response).to render_template('new')
+				end
 			end
 		end
 
-		context 'as an unauthenticated user' do
+		context 'as a guest user' do
 			it 'does not succeed' do
 				post :create, format: :json, params: {project_id: @project.id, task: @new_task}
 				expect(response).to_not be_success
