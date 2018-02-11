@@ -19,5 +19,7 @@ Rails.application.routes.draw do
     resources :projects#, only: [:index, :show, :create]
   end
 
+	get 'home/new', to: 'home#new'
+
   root "home#index"
 end
