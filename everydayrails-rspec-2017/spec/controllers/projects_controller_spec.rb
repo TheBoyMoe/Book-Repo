@@ -40,39 +40,6 @@ RSpec.describe ProjectsController, type: :controller do
 
 	end
 
-	describe '#show' do
-		# as a logged in user, I can view my own projects
-		context 'as an authorised user' do
-			before {
-				@user = FactoryBot.create(:user)
-				@project = FactoryBot.create(:project, owner: @user)
-			}
-
-			it 'responds successfully' do
-				sign_in @user
-				get :show, params: {id: @project.id}
-
-				expect(response).to be_success
-			end
-		end
-
-		# as a logged in user, I cannot view other users projects
-		context 'as an unauthorised user' do
-			before {
-				@user = FactoryBot.create(:user)
-				other_user = FactoryBot.create(:user)
-				@project = FactoryBot.create(:project, owner: other_user)
-			}
-
-			it 'redirects to the dashboard' do
-				sign_in @user
-				get :show, params: {id: @project.id}
-
-				expect(response).to redirect_to root_path
-			end
-		end
-	end
-
 	describe '#new' do
 		context 'as an authenticated user' do
 			before{
@@ -142,6 +109,93 @@ RSpec.describe ProjectsController, type: :controller do
 
 			it 'returns a 302 response' do
 				expect(response).to have_http_status 302
+			end
+
+			it 'redirects to the sign in page' do
+				expect(response).to redirect_to '/users/sign_in'
+			end
+		end
+
+	end
+
+	describe '#show' do
+		# as a logged in user, I can view my own projects
+		context 'as an authorised user' do
+			before {
+				@user = FactoryBot.create(:user)
+				@project = FactoryBot.create(:project, owner: @user)
+			}
+
+			it 'responds successfully' do
+				sign_in @user
+				get :show, params: {id: @project.id}
+
+				expect(response).to be_success
+			end
+		end
+
+		# as a logged in user, I cannot view other users projects
+		context 'as an unauthorised user' do
+			before {
+				@user = FactoryBot.create(:user)
+				other_user = FactoryBot.create(:user)
+				@project = FactoryBot.create(:project, owner: other_user)
+			}
+
+			it 'redirects to the dashboard' do
+				sign_in @user
+				get :show, params: {id: @project.id}
+
+				expect(response).to redirect_to root_path
+			end
+		end
+	end
+
+	describe '#edit' do
+		before {
+			@user = FactoryBot.create(:user)
+			@project = FactoryBot.create(:project, owner: @user)
+		}
+
+		context 'as an authenticated user' do
+			context 'as an authorised user'do
+				before {
+					sign_in @user
+					get :edit, params: {id: @project.id}
+				}
+				it 'return a response status of 200' do
+					expect(response).to have_http_status(200)
+				end
+
+				it 'render the edit view' do
+					expect(response).to render_template('edit')
+				end
+			end
+
+			context 'as an unauthorised user' do
+				before {
+					other_user = FactoryBot.create(:user)
+					sign_in other_user
+					get :edit, params: {id: @project.id}
+				}
+
+				it 'returns a response status of 302' do
+					expect(response).to have_http_status(302)
+				end
+
+				it 'redirects to the dashboard' do
+					expect(response).to redirect_to root_path
+				end
+			end
+		end
+
+		context 'as a guest' do
+			before {
+				get :edit, params: {id: @project.id}
+			}
+
+			it 'responds with a 302 status' do
+				expect(response).to have_http_status(302)
 			end
 
 			it 'redirects to the sign in page' do
