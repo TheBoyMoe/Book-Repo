@@ -188,4 +188,74 @@ RSpec.describe TasksController, type: :controller do
 		end
 	end
 
+	describe '#update' do
+		before {
+			@task_params = FactoryBot.attributes_for(:task, name: 'New Task Name')
+		}
+
+		context 'as an authenticated user' do
+
+			context 'who is authorised' do
+				before {
+					sign_in @user
+				}
+
+				context 'with valid data' do
+					before {
+						patch :update, params: {project_id: @project.id, id: @task.id, task: @task_params}
+					}
+					it 'it updates the task' do
+						expect(@task.reload.name).to eq('New Task Name')
+					end
+
+					it 'redirect to project show' do
+						expect(response).to redirect_to("/projects/#{@project.id}")
+					end
+				end
+
+				context 'with invalid data' do
+					before {
+						invalid_params = FactoryBot.attributes_for(:task, name: nil)
+						patch :update, params: {project_id: @project.id, id: @task.id, task: invalid_params}
+					}
+
+					it 'does not update the task' do
+						expect(@task.reload.name).to eq('Test task')
+					end
+
+					it 'renders the edit template' do
+						expect(response).to render_template('edit')
+					end
+				end
+			end
+
+			context 'who is not authorised' do
+				before {
+					sign_in @other_user
+					patch :update, params: {project_id: @project.id, id: @task.id, task: @task_params}
+				}
+				it 'does not update the task' do
+					expect(@task.reload.name).to eq('Test task')
+				end
+
+				it 'redirects to the dashboard' do
+					expect(response).to redirect_to root_path
+				end
+			end
+		end
+
+		context 'as a guest' do
+			before {
+				patch :update, params: {project_id: @project.id, id: @task.id, task: @task_params}
+			}
+			it 'does not update the task' do
+				expect(@task.reload.name).to eq('Test task')
+			end
+
+			it 'redirects to the sign in page' do
+				expect(response).to redirect_to '/users/sign_in'
+			end
+		end
+	end
+
 end
