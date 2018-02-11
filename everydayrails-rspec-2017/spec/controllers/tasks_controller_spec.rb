@@ -158,4 +158,34 @@ RSpec.describe TasksController, type: :controller do
 
 	end
 
+	describe '#edit' do
+		context 'as an authenticated user' do
+
+			context 'who is authorised' do
+				before {
+					sign_in @user
+					get :edit, params: {project_id: @project.id, id: @task.id}
+				}
+
+				it 'returns a htp status of 200' do
+					expect(response).to have_http_status 200
+				end
+
+				it 'renders the view' do
+					expect(response).to render_template('edit')
+				end
+			end
+
+			context 'who is unauthorised'
+
+		end
+
+		context 'as a guest' do
+			it 'redirects to the sign in page' do
+				get :edit, params: {project_id: @project.id, id: @task.id}
+				expect(response).to redirect_to '/users/sign_in'
+			end
+		end
+	end
+
 end
