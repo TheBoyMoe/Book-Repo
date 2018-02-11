@@ -91,4 +91,57 @@ RSpec.describe NotesController, type: :controller do
 			end
 		end
 	end
+
+	describe '#create' do
+		before {
+			@note_params = {message: 'New message', user: @user}
+		}
+		context 'as an authenticated user' do
+			before {sign_in @user}
+
+			context 'who is authorised' do
+				context 'with valid data' do
+					it 'adds a note' do
+						expect {
+							post :create, params: {project_id: @project.id, note: @note_params}
+						}.to change(@project.notes, :count).by(1)
+					end
+				end
+
+				context 'with invalid data' do
+					it 'does not add a note' do
+						invalid_params = {message: nil, user: @user}
+						expect {
+							post :create, params: {project_id: @project.id, note: invalid_params}
+						}.to_not change(@project.notes, :count)
+					end
+				end
+			end
+
+			context 'who is not authorised' do
+				it 'does not add a note' do
+					sign_in @other_user
+					note_params = {message: 'Other Users note', user: @other_user}
+					expect {
+						post :create, params: {project_id: @project.id, note: note_params}
+					}.to_not change(@project.notes, :count)
+				end
+
+			end
+		end
+
+		context 'as a guest' do
+			it 'does not create the note' do
+				expect {
+					post :create, params: {project_id: @project.id, note: @note_params}
+				}.to_not change(@project.notes, :count)
+			end
+
+			it 'redirects to the sign in page' do
+				post :create, params: {project_id: @project.id, note: @note_params}
+				expect(response).to redirect_to '/users/sign_in'
+			end
+		end
+	end
+
 end
