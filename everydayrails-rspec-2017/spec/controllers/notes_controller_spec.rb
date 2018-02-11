@@ -5,7 +5,7 @@ RSpec.describe NotesController, type: :controller do
 		@user = FactoryBot.create(:user)
 		@other_user = FactoryBot.create(:user, first_name: 'Tim')
 		@project = FactoryBot.create(:project, owner: @user)
-		@note = @project.notes.create(message: 'Test message')
+		@note = @project.notes.create!(message: 'Test message', user: @user)
 	}
 
 	describe '#index' do
@@ -35,4 +35,33 @@ RSpec.describe NotesController, type: :controller do
 		end
 
 	end
+
+	describe '#show' do
+		context 'as an authenticated user' do
+			context 'who is authorised' do
+				it 'return data in json format' do
+					sign_in @user
+					get :show, format: :json, params: {project_id: @project.id, id: @note.id}
+					expect(response.content_type).to eq 'application/json'
+				end
+			end
+
+			context 'who is not authorised' do
+				it 'redirects to the dashboard' do
+					sign_in @other_user
+					get :show, format: :json, params: {project_id: @project.id, id: @note.id}
+					expect(response).to redirect_to root_path
+				end
+			end
+		end
+
+		context 'as a guest' do
+			it 'redirects to the sign in page' do
+				get :show, params: {project_id: @project.id, id: @note.id}
+				expect(response).to redirect_to '/users/sign_in'
+			end
+		end
+	end
+
+
 end
