@@ -171,4 +171,68 @@ RSpec.describe NotesController, type: :controller do
 		end
 	end
 
+	describe '#update' do
+		context 'as an authenticated user' do
+			context 'who is authorised' do
+				before { sign_in @user }
+
+				context 'with valid data' do
+					before {
+						note_params = {message: 'New Note Message'}
+						patch :update, params: {project_id: @project.id, id: @note.id, note: note_params}
+					}
+
+					it 'updates the note' do
+						expect(@note.reload.message).to eq('New Note Message')
+					end
+
+					it 'redirects to the project show view' do
+						expect(response).to redirect_to "/projects/#{@project.id}"
+					end
+				end
+
+				context 'with invalid data' do
+					before {
+						note_params = {message: nil}
+						patch :update, params: {project_id: @project.id, id: @note.id, note: note_params}
+					}
+
+					it 'does not update the note' do
+						expect(@note.reload.message).to eq('Test message')
+					end
+
+					it 'renders the edit view' do
+						expect(response).to render_template('edit')
+					end
+				end
+			end
+
+			context 'who is not authorised' do
+				before {
+					sign_in @other_user
+					note_params = {message: 'Other Users Note', user: @other_user}
+					patch :update, params: {project_id: @project.id, id: @note.id, note: note_params}
+				}
+
+				it 'does not update the note' do
+					expect(@note.reload.message).to eq('Test message')
+				end
+
+				it 'redirects to the dashboard' do
+					expect(response).to redirect_to root_path
+				end
+			end
+		end
+
+		context 'as a guest user' do
+			it 'does not update note' do
+
+			end
+
+			it 'redirects to the sign in page' do
+
+			end
+		end
+	end
+
 end
