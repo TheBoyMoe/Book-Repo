@@ -258,4 +258,35 @@ RSpec.describe TasksController, type: :controller do
 		end
 	end
 
+	describe '#destroy' do
+		context 'as an authenticated user' do
+			context 'who is authorised' do
+				it 'deletes the task' do
+					sign_in @user
+					expect {
+						delete :destroy, params: {project_id: @project.id, id: @task.id}
+					}.to change(@project.tasks, :count).by(-1)
+				end
+			end
+
+			context 'who is not authorised' do
+				it 'does not delete the task' do
+					sign_in @other_user
+					expect {
+						delete :destroy, params: {project_id: @project.id, id: @task.id}
+					}.to_not change(@project.tasks, :count)
+				end
+			end
+		end
+
+
+		context 'as a guest' do
+			it 'does not delete the task' do
+				expect {
+					delete :destroy, params: {project_id: @project.id, id: @task.id}
+				}.to_not change(@project.tasks, :count)
+			end
+		end
+	end
+
 end
