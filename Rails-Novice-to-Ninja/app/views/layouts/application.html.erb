@@ -9,6 +9,15 @@
   </head>
 
   <body>
-    <%= yield %>
+    <div id="content">
+			<% unless flash[:error].blank? %>
+				<div id="error"><%= flash[:error] %></div>
+			<% end %>
+			<% unless flash[:notice].blank? %>
+				<div id="notification"><%= flash[:notice] %></div>
+			<% end %>
+      <h1>Readit</h1>
+      <%= yield %>
+    </div>
   </body>
 </html>

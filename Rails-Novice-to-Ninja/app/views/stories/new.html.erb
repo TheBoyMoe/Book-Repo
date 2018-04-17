@@ -1,5 +1,17 @@
 <%= form_for @story do |f| %>
-  <div>
+
+  <% if @story.errors.any? %>
+  	<div class="form_errors">
+  		<h3>Errors</h3>
+  		<ul>
+  			<% @story.errors.full_messages.each do |message| %>
+  				<li><%= message %></li>
+  			<% end %>
+  		</ul>
+  	</div>
+  <% end %>
+
+	<div>
     <%= f.label :name %><br>
     <%= f.text_field :name %>
   </div>
