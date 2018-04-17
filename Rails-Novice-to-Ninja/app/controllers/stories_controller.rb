@@ -1,5 +1,8 @@
 class StoriesController < ApplicationController
-  def index
+  before_action :set_story, only: [:show]
+
+	def index
+		@story = Story.all.order('RANDOM()').first
   end
 
   def new
@@ -19,4 +22,8 @@ class StoriesController < ApplicationController
     def story_params
       params.require(:story).permit(:name, :link)
     end
+
+		def set_story
+			@story = Story.find(params[:id])
+		end
 end

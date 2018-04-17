@@ -4,4 +4,5 @@ Rails.application.routes.draw do
   # post '/stories', to: 'stories#create'
 
   resources :stories
+  root to: 'stories#index'
 end
