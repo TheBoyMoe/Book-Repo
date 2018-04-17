@@ -1,6 +1,19 @@
-<h2><%= @story.name %><h2>
+<h2>
+  <span id="vote_score">
+    Score: <%= @story.votes.count %>
+  </span>
+  <%= @story.name %>
+<h2>
 <p><%= link_to @story.link, @story.link %></p>
 
+<div id="vote_form">
+  <!-- using remote : true cause form data to be submitted using ajax,
+        disabling the default form behaviour(page refresh)
+        routes the request to POST 'votes#create' passing in the @story obj -->
+  <%= form_tag story_votes_path(@story), remote: true do %>
+    <% submit_tag 'Vote for it!' %>
+  <% end %>
+</div>
 <br>
 <%= link_to 'Back', stories_path %>
 
