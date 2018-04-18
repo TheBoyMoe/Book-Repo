@@ -1,10 +1,12 @@
 var vote_score = document.getElementById("vote_score");
-// var vote_history = document.getElementById("vote_history");
+var vote_history = document.getElementById("vote_history");
 
+// update vote score box
 vote_score.textContent = "Score: " + <%= @story.votes.size %>
 vote_score.style.backgroundColor = "#ffffcc";
 
-// vote_history.html('<%#= j( render partial: "votes/vote", collection: @story.votes.latest )  %>')
+// update vote history box, replace it's contents with an up-to-date-list
+vote_history.innerHTML = '<%= j( render partial: "votes/vote", collection: @story.votes.latest )  %>';
 
 // remove the background color effect on score after 1 sec
 setTimeout(function(){
