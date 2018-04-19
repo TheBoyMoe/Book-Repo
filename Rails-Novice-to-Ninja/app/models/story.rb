@@ -1,6 +1,8 @@
 class Story < ApplicationRecord
   validates :name, :link, presence: true
 
+  belongs_to :user
+
   # customise has_many association
   has_many :votes do
     # return the last 6 votes

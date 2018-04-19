@@ -1,8 +1,7 @@
 Rails.application.routes.draw do
 
-  # get '/stories/index'
-  # get '/stories/new'
-  # post '/stories', to: 'stories#create'
+  # singular form of resource - rails creates a singleton of the resource
+  resource :session, only: [:create, :new, :destroy]
 
   resources :stories do
     resources :votes
