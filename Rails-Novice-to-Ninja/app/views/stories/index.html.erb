@@ -1,3 +1,4 @@
 <h1>Stories List</h1>
-<p><%= link_to @story.name, story_path(@story) %></p>
-
+<% if @story %>
+  <p><%= link_to @story.name, story_path(@story) %></p>
+<% end %>

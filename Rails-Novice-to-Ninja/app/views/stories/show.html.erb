@@ -13,6 +13,10 @@
   <% end %>
 </ul>
 
+<p class="submitted_by">
+  Submitted by: <span><%= @story.user.name %></span>
+</p>
+
 <p><%= link_to @story.link, @story.link %></p>
 
 <div id="vote_form">

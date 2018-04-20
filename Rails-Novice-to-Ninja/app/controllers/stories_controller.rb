@@ -11,7 +11,9 @@ class StoriesController < ApplicationController
   end
 
   def create
-    @story = Story.new(story_params)
+    # associate the story with the approriate user
+    # @current_user is set by current_user method of application controller
+    @story = @current_user.stories.build(story_params)
     if @story.save
     	redirect_to stories_path, notice: 'Story submission succeeded'
 		else
