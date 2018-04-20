@@ -28,5 +28,9 @@
       <h1>Readit</h1>
       <%= yield %>
     </div>
+    <ul id="navigation">
+      <li><%= link_to 'Stories', stories_path %></li>
+      <li><%= link_to 'New Story', new_story_path %></li>
+    </ul>
   </body>
 </html>

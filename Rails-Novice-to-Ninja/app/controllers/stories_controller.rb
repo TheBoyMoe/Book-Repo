@@ -1,5 +1,6 @@
 class StoriesController < ApplicationController
   before_action :set_story, only: [:show]
+  before_action :ensure_login, only: [:new, :create]
 
 	def index
 		@story = Story.all.order('RANDOM()').first
