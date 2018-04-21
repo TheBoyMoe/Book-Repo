@@ -23,10 +23,11 @@
   <!-- using remote : true cause form data to be submitted using ajax,
         disabling the default form behaviour(page refresh)
         routes the request to POST 'votes#create' passing in the @story obj -->
-  <%= form_tag story_votes_path(@story), remote: true do %>
-    <% submit_tag 'Vote for it!' %>
+  <%= form_for [@story, Vote.new], remote: true do |f| %>
+    <% f.submit 'Vote for it!' %>
   <% end %>
 </div>
+
 <br>
 <%= link_to 'Back', stories_path %>
 

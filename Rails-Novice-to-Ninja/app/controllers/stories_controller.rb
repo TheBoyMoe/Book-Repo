@@ -6,6 +6,9 @@ class StoriesController < ApplicationController
 		@story = Story.all.order('RANDOM()').first
   end
 
+  def show
+  end
+
   def new
     @story = Story.new
   end

@@ -3,7 +3,9 @@
 one:
   name: MIT Tech Review
   link: http://techreview.com
+  user: glenn
 
 two:
   name: SitePoint Forums
   link: http://community.sitepoint.com
+  user: glenn

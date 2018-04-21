@@ -1,8 +1,7 @@
 require 'test_helper'
 
 class StoryTest < ActiveSupport::TestCase
-
-	test "is not valid without a name" do
+  test "is not valid without a name" do
     s = Story.create(
       name: nil,
       link: 'http://www.testsubmission.com/'
@@ -17,10 +16,12 @@ class StoryTest < ActiveSupport::TestCase
     refute s.valid?
   end
 
+	# since a story is associated with a user, we must add that association when creating the story
+	# without which the story will not be valid
   test "is valid with required attributes" do
-    s = Story.create(
-                     name: 'My test submission',
-                     link: 'http://www.testsubmission.com/')
+    s = users(:glenn).stories.create(
+      name: 'My test submission',
+      link: 'http://www.testsubmission.com/')
     assert s.valid?
   end
 
@@ -30,8 +31,13 @@ class StoryTest < ActiveSupport::TestCase
   end
 
   test "return 6 latest votes" do
-    10.times { stories(:one).votes.create }
+		# stories need to be associated with a user when created
+    10.times { stories(:one).votes.create(user: users(:glenn)) }
     assert_equal 6, stories(:one).votes.latest.size
   end
 
+	# test belongs_to association
+  test "is associated with a user"do
+    assert_equal users(:glenn), stories(:one).user
+  end
 end
