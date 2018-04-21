@@ -19,6 +19,8 @@
 
 <p><%= link_to @story.link, @story.link %></p>
 
+<% if logged_in? %>
+
 <div id="vote_form">
   <!-- using remote : true cause form data to be submitted using ajax,
         disabling the default form behaviour(page refresh)
@@ -27,4 +29,7 @@
     <% f.submit 'Vote for it!' %>
   <% end %>
 </div>
+<% else %>
+  <p><em>You can vote if you were <%= link_to 'logged in', new_session_path %>!</em></p>
+<% end %>
 
