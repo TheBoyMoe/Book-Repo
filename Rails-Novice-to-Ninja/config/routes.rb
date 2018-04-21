@@ -4,6 +4,9 @@ Rails.application.routes.draw do
   resource :session, only: [:create, :new, :destroy]
 
   resources :stories do
+    collection do
+      get 'bin'
+    end
     resources :votes
   end
 

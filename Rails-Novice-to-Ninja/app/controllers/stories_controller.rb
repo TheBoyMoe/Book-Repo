@@ -3,7 +3,10 @@ class StoriesController < ApplicationController
   before_action :ensure_login, only: [:new, :create]
 
 	def index
-		@story = Story.all.order('RANDOM()').first
+    # return stories with 5 or more votes in desc order by id, newest first
+		# @stories = fetch_stories('votes_count >= 5')
+
+    @stories = Story.popular
   end
 
   def show
@@ -23,6 +26,17 @@ class StoriesController < ApplicationController
 			render :new
 		end
   end
+
+  def bin
+    # @stories = fetch_stories('votes_count < 5')
+    @stories = Story.upcoming
+    render :index
+  end
+
+  protected
+    def fetch_stories(conditions)
+      @stories = Story.where(conditions).order('id DESC')
+    end
 
   private
     def story_params

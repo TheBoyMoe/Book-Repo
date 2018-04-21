@@ -1,4 +1,2 @@
-<h1>Stories List</h1>
-<% if @story %>
-  <p><%= link_to @story.name, story_path(@story) %></p>
-<% end %>
+<h2><%= story_list_heading %></h2>
+<%= render partial: 'story', collection: @stories %>
