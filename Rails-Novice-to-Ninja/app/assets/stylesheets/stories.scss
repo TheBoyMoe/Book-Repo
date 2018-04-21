@@ -26,7 +26,7 @@ $vote_color: #393;
 }
 #vote_history {
   padding: 5px;
-  margin: 0;
+  margin: 0 0 0 16px;
   list-style: none;
   border: 3px solid #ccc;
   background-color: #eee;
@@ -43,4 +43,9 @@ $vote_color: #393;
 }
 .story p {
   color: #666;
+}
+p {
+  font-size: 16px;
+  line-height: 24px;
+  font-weight: 500;
 }
