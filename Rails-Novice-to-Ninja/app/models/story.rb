@@ -1,6 +1,6 @@
 class Story < ApplicationRecord
   validates :name, :link, presence: true
-
+  after_create :create_initial_vote
   belongs_to :user
 
   # customise has_many association
@@ -22,4 +22,9 @@ class Story < ApplicationRecord
     "#{id}-#{name.gsub(/\W/, '-').downcase}"
   end
 
+  protected
+    def create_initial_vote
+      # we're able to use the 'votes' and 'user' attribute of the story model
+      votes.create(user: user)
+    end
 end
