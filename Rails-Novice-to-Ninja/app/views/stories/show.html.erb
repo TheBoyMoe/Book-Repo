@@ -16,7 +16,7 @@
 <p><%= @story.description %></p>
 
 <p class="submitted_by">
-  <strong>Submitted by: <span><%= @story.user.name %></span></strong>
+  <strong>Submitted by: <span><%= link_to @story.user.name, user_path(@story.user) %></span></strong>
 </p>
 
 <p><%= link_to @story.link, @story.link %></p>

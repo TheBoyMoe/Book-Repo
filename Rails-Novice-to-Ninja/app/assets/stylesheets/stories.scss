@@ -43,9 +43,15 @@ $vote_color: #393;
 }
 .story p {
   color: #666;
+	font-size: 0.8em;
 }
 p {
-  font-size: 16px;
+  font-size: 0.8em;
   line-height: 24px;
   font-weight: 500;
+}
+h2 {
+	clear: both;
+	margin: 0;
+	padding: 10px 0;
 }
