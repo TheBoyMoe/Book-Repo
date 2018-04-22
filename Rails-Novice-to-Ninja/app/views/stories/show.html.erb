@@ -1,0 +1,42 @@
+<h2>
+  <span id="vote_score">
+    Score: <%= @story.votes.count %>
+  </span>
+  <%= @story.name %>
+</h2>
+
+<ul id="vote_history">
+  <% if @story.votes.empty? %>
+    <em> No votes yet!</em>
+  <% else %>
+    <%= render partial: 'votes/vote', collection: @story.votes.latest %>
+  <% end %>
+</ul>
+
+<p><%= @story.description %></p>
+
+<p class="submitted_by">
+  <strong>Submitted by: <span><%= link_to @story.user.name, user_path(@story.user) %></span></strong>
+</p>
+
+<p><%= link_to @story.link, @story.link %></p>
+
+<% unless @story.tag_list.empty? %>
+  <p class="tags">
+    <strong>Tags:</strong><%= render partial: 'tags/tag', collection: @story.tags %>
+  </p>
+<% end %>
+
+<% if logged_in? %>
+  <div id="vote_form">
+    <!-- using remote : true cause form data to be submitted using ajax,
+          disabling the default form behaviour(page refresh)
+          routes the request to POST 'votes#create' passing in the @story obj -->
+    <%= form_for [@story, Vote.new], remote: true do |f| %>
+      <% f.submit 'Vote for it!' %>
+    <% end %>
+  </div>
+<% else %>
+  <p><em>You can vote if you were <%= link_to 'logged in', new_session_path %>!</em></p>
+<% end %>
+
