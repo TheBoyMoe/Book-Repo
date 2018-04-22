@@ -10,7 +10,7 @@ class Story < ApplicationRecord
       order('id DESC').limit(6)
     end
   end
-  
+
   # use ActiveRecord scopes as a means to define class methods with common queries
   scope :upcoming, -> { where('votes_count < 5').order('id DESC') }
   scope :popular, -> { where('votes_count >= 5').order('id DESC') }

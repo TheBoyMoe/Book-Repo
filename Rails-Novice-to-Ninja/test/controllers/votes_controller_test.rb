@@ -24,4 +24,10 @@ class VotesControllerTest < ActionDispatch::IntegrationTest
     post story_votes_path(stories(:two))
     assert_redirected_to story_path(stories(:two))
   end
+
+  test "stores user with vote" do
+    post story_votes_path(stories(:two))
+    stories(:two).reload
+    assert_equal users(:glenn), stories(:two).votes.last.user
+  end
 end
