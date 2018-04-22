@@ -35,7 +35,11 @@ class StoriesController < ApplicationController
 
   protected
     def fetch_stories(conditions)
-      @stories = Story.where(conditions).order('id DESC')
+			# benchmark the retireval of stories and print to the development log
+			results = Benchmark.measure do
+      	@stories = Story.where(conditions).order('id DESC')
+			end
+			Rails.logger.info results
     end
 
   private

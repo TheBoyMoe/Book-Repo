@@ -8,6 +8,9 @@ class ApplicationController < ActionController::Base
       return unless session[:user_id]
       # find returns an error if the user can't be found, where returns nil
       @current_user = User.where(id: session[:user_id]).first
+
+      # log user access using Rails.logger object
+      # Rails.logger.info "#{@current_user.name} requested #{request.fullpath} on #{Time.now}"
     end
 
     def logged_in?
