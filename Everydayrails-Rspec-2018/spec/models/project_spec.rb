@@ -5,6 +5,11 @@ RSpec.describe Project, type: :model do
     @tom = User.create( first_name: 'Tom', last_name: 'Jones', email: 'tom@ex.com', password: 'password')
   end
   
+  it 'is valid with a name and owner' do
+    project = Project.create(name: 'Test Project', owner: @tom)
+    expect(project).to be_valid
+  end
+
   describe 'it is invalid without a' do
     it 'name' do
       project = @tom.projects.new(name: nil)
