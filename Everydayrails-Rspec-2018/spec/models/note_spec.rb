@@ -10,6 +10,9 @@ RSpec.describe Note, type: :model do
     it 'a message, project and user' do
       note = Note.new(message: 'New note', project: @project, user: @user)
       expect(note).to be_valid
+
+      note = FactoryBot.build(:note)
+      expect(note).to be_valid
     end
   end
   
@@ -18,15 +21,27 @@ RSpec.describe Note, type: :model do
       note = Note.new(message: nil, project: @project, user: @user)
       note.valid?
       expect(note.errors[:message]).to include("can't be blank")
+
+      note = FactoryBot.build(:note, message: nil)
+      note.valid?
+      expect(note.errors[:message]).to include("can't be blank")
     end
     
     it 'user' do
       note = Note.create(message: 'New note', project: @project, user: nil)
       expect(note.errors[:user]).to include('must exist')
+
+      note = FactoryBot.build(:note, user: nil)
+      note.valid?
+      expect(note.errors[:user]).to include('must exist')
     end
   
     it 'project' do
       note = Note.create(message: 'New note', project: nil, user: @user)
+      expect(note.errors[:project]).to include('must exist')
+
+      note = FactoryBot.build(:note, project: nil, user: @user)
+      note.valid?
       expect(note.errors[:project]).to include('must exist')
     end
   end
