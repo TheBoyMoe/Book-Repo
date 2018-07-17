@@ -4,42 +4,63 @@ RSpec.describe User, type: :model do
   
   describe 'is valid' do
     it 'with a first name, last name, email, and password' do
-      user = User.new(first_name: 'Tom', last_name: 'Jones', email: 'tom@ex.com', password: 'password')
+      # user = User.new(first_name: 'Tom', last_name: 'Jones', email: 'tom@ex.com', password: 'password')
+      user = FactoryBot.build(:user)
       expect(user).to be_valid
     end
   end
 
   describe 'is invalid' do
     it 'without a fist name' do
+      user = User.new(first_name: nil)
+      expect(user).to_not be_valid
+      
+      user = User.new(first_name: nil)
+      user.valid?
+      expect(user.errors[:first_name]).to include("can't be blank")
+      
       user = User.create(first_name: nil)
+      expect(user.errors[:first_name]).to include("can't be blank")
+      
+      user = FactoryBot.build(:user, first_name: nil)
+      expect(user).to_not be_valid
+
+      user = FactoryBot.build(:user, first_name: nil)
+      user.valid?
       expect(user.errors[:first_name]).to include("can't be blank")
     end
   
     it 'without a last name' do
-      user = User.create(last_name: nil)
+      user = FactoryBot.build(:user, last_name: nil)
+      user.valid?
       expect(user.errors[:last_name]).to include("can't be blank")
     end
   
     it 'without an email address' do
-      user = User.create(email: nil)
+      user = FactoryBot.build(:user, email: nil)
+      user.valid?
       expect(user.errors[:email]).to include("can't be blank")
     end
     
     it 'with a duplicate email adddress' do
-      User.create(first_name: 'Tom', last_name: 'Jones', email: 'tom@ex.com', password: 'password')
-      user = User.create( first_name: 'Dick', last_name: 'Jones', email: 'tom@ex.com', password: 'password')
+      # User.create(first_name: 'Tom', last_name: 'Jones', email: 'tom@ex.com', password: 'password')
+      # user = User.create(first_name: 'Dick', last_name: 'Jones', email: 'tom@ex.com', password: 'password')
+      FactoryBot.create(:user, email: 'test@example.com')
+      user = FactoryBot.build(:user, email: 'test@example.com')
+      user.valid?
       expect(user.errors[:email]).to include('has already been taken')
     end
   end
 
   it "return's the user's full name as a string" do
-    user = User.create( first_name: 'Tom', last_name: 'Jones', email: 'tom@ex.com', password: 'password')
-    expect(user.name).to eq 'Tom Jones'
+    # user = User.create( first_name: 'Tom', last_name: 'Jones', email: 'tom@ex.com', password: 'password')
+    user = FactoryBot.build(:user, first_name: 'Simon', last_name: 'Jones')
+    expect(user.name).to eq 'Simon Jones'
   end
 
   describe 'User has many' do
     before do
-      @user = User.new(first_name: 'Tom', last_name: 'Jones', email: 'tom@ex.com', password: 'password')      
+      @user = FactoryBot.create(:user)
       @project = Project.create(name: 'Test Project', owner: @user)
       @note = Note.create(message: 'New message', project: @project, user: @user)
     end
@@ -52,5 +73,4 @@ RSpec.describe User, type: :model do
       expect(@user.projects).to include(@project)
     end
   end
-  
 end
