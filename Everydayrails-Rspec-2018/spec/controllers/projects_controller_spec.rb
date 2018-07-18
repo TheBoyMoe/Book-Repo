@@ -70,4 +70,88 @@ RSpec.describe ProjectsController, type: :controller do
       end
     end
   end
+
+  describe '#create' do
+    context 'as an authenticated user' do
+      before do
+        @user = FactoryBot.create(:user)
+        @project_params = FactoryBot.attributes_for(:project)
+      end
+
+      it 'adds a project' do
+        sign_in @user
+        expect {
+          post :create, params: { project: @project_params }
+        }.to change(@user.projects, :count).by(1)
+      end
+    end
+
+    context 'as a guest' do
+      before do
+        post :create, params: { project: @project_params }
+      end
+
+      it 'returns a 302 response' do
+        expect(response).to have_http_status '302'
+      end
+
+      it 'redirects to the sign-in page' do
+        expect(response).to redirect_to '/users/sign_in'
+      end
+    end
+  end
+
+  describe '#update' do
+    context 'as an authorized user' do
+      before do
+        @user = FactoryBot.create(:user)
+        @project = FactoryBot.create(:project, owner: @user)
+      end
+
+      it 'updates the project' do
+        project_params = FactoryBot.attributes_for(:project, name: 'New Project Name')
+        sign_in @user
+        patch :update, params: { id: @project.id, project: project_params }
+        expect(@project.reload.name).to eq 'New Project Name'
+      end
+    end
+
+    # try and update the project of another user
+    context 'as an unauthorized user' do
+      before do
+        @user = FactoryBot.create(:user)
+        other_user = FactoryBot.create(:user)
+        @project = FactoryBot.create(:project, owner: other_user, name: 'Same Old Name')
+ 
+        project_params = FactoryBot.attributes_for(:project, name: 'New Project Name')
+        sign_in @user # you need to be authenticated
+        patch :update, params: { id: @project.id, project: project_params }
+      end
+
+      it 'does not update the project' do
+        expect(@project.reload.name).to eq 'Same Old Name'
+      end
+
+      it 'redirect to the dashboard' do
+        expect(response).to redirect_to root_path
+      end
+    end
+
+    # unauthenticated user
+    context 'as a guest' do
+      before do
+        project = FactoryBot.create(:project)
+        project_params = FactoryBot.attributes_for(:project, name: 'New Project Name')
+        patch :update, params: { id: project.id, project: project_params }
+      end
+      
+      it 'returns a 302 response' do
+        expect(response).to have_http_status '302'
+      end
+
+      it 'redirects to the sign-in page' do
+        expect(response).to redirect_to '/users/sign_in'
+      end
+    end
+  end
 end
