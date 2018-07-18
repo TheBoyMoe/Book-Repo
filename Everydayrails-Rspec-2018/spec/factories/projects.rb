@@ -42,6 +42,10 @@ FactoryBot.define do
     trait :with_tasks do
       after(:create) { |project| create_list(:task, 5, project: project)}
     end
+
+    trait :invalid do
+      name nil
+    end
   end
 
   # create multiple factories of the same model
