@@ -19,7 +19,6 @@ group :development, :test do
   gem 'factory_bot_rails', '~> 4.10'
   gem 'rails-controller-testing'
   gem 'byebug', platforms: [:mri, :mingw, :x64_mingw]
-  gem 'selenium-webdriver'
   gem 'pry-rails'
 end
 
@@ -36,6 +35,8 @@ group :test do
   gem 'capybara', '~> 2.15.2'
   gem 'launchy', '~> 2.4.3'
   gem 'simplecov', require: false
+  gem 'selenium-webdriver'
+  gem 'chromedriver-helper'
 end
 
 gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
