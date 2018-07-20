@@ -3,7 +3,9 @@
 RSpec.feature 'Projects', type: :feature do
   before do
     @user = FactoryBot.create(:user)
-    sign_in_as(@user)
+    # sign_in_as(@user)
+    login_as @user, scope: :user # Devise helper method
+    visit root_path
   end
   
   scenario 'user creates a new project' do

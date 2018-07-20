@@ -4,10 +4,12 @@ RSpec.feature "Notes", type: :feature do
   before do
     @user = FactoryBot.create(:user)
     @project = FactoryBot.create(:project, name: 'RSpec tutorial', owner: @user)
-    sign_in_as(@user)
+    # sign_in_as(@user)
+    login_as @user, scope: :user # Devise helper method
+    visit root_path
     click_link 'RSpec tutorial'
   end
-  
+
   scenario 'user creates a new note' do
     expect {
       click_link 'Add Note'
