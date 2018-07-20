@@ -4,12 +4,7 @@ RSpec.feature "Notes", type: :feature do
   before do
     @user = FactoryBot.create(:user)
     @project = FactoryBot.create(:project, name: 'RSpec tutorial', owner: @user)
-    
-    visit root_path
-    click_link 'Sign in'
-    fill_in 'Email',	with: @user.email
-    fill_in 'Password', with: @user.password
-    click_button 'Log in'
+    sign_in_as(@user)
     click_link 'RSpec tutorial'
   end
   
