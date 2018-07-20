@@ -55,11 +55,13 @@ RSpec.feature "Tasks", type: :feature do
     click_link 'Add Task'
     fill_in 'task_name', with: 'New Project Task'
     click_button 'Create Task'
-    expect(page).to have_content('New Project Task')  
-    within '.task' do
-      click_link 'Delete'
-    end
-    page.accept_alert
-    expect(page).to_not have_content('New Project Task')
+    expect(page).to have_content('New Project Task')
+    expect {
+      within '.task' do
+        click_link 'Delete'
+      end
+      page.accept_alert
+      expect(page).to_not have_content('New Project Task')
+    }.to change(@project.tasks, :count).by(-1)
   end
 end
