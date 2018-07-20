@@ -5,20 +5,18 @@ RSpec.describe ProjectsController, type: :controller do
 
   describe '#index' do
     context 'as an authenticated user' do
-      before do
+      # before do
         # create user and simulate sign-in
         # user = FactoryBot.create(:user)
-        sign_in(user)
-      end
+      # end
       
       it 'responds successfully' do
+        sign_in(user)
         get :index
-        expect(response).to be_success
-      end
-  
-      it 'returns a 200 response' do
-        get :index
-        expect(response).to have_http_status '200'
+        aggregate_failures do
+          expect(response).to be_success
+          expect(response).to have_http_status '200'
+        end
       end
     end
     
