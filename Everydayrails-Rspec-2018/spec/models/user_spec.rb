@@ -2,6 +2,12 @@ require 'rails_helper'
 
 RSpec.describe User, type: :model do
   
+  # shoulda matchers removes the need to use the valid/invalid code blocks
+  it { is_expected.to validate_presence_of(:first_name) }
+  it { is_expected.to validate_presence_of(:last_name) }
+  it { is_expected.to validate_presence_of(:email) }
+  it { is_expected.to validate_uniqueness_of(:email).case_insensitive }
+
   describe 'is valid' do
     it 'with a first name, last name, email, and password' do
       # user = User.new(first_name: 'Tom', last_name: 'Jones', email: 'tom@ex.com', password: 'password')
@@ -14,14 +20,14 @@ RSpec.describe User, type: :model do
     it 'without a fist name' do
       user = User.new(first_name: nil)
       expect(user).to_not be_valid
-      
+
       user = User.new(first_name: nil)
       user.valid?
       expect(user.errors[:first_name]).to include("can't be blank")
-      
+
       user = User.create(first_name: nil)
       expect(user.errors[:first_name]).to include("can't be blank")
-      
+
       user = FactoryBot.build(:user, first_name: nil)
       expect(user).to_not be_valid
 
@@ -29,19 +35,19 @@ RSpec.describe User, type: :model do
       user.valid?
       expect(user.errors[:first_name]).to include("can't be blank")
     end
-  
+
     it 'without a last name' do
       user = FactoryBot.build(:user, last_name: nil)
       user.valid?
       expect(user.errors[:last_name]).to include("can't be blank")
     end
-  
+
     it 'without an email address' do
       user = FactoryBot.build(:user, email: nil)
       user.valid?
       expect(user.errors[:email]).to include("can't be blank")
     end
-    
+
     it 'with a duplicate email adddress' do
       # User.create(first_name: 'Tom', last_name: 'Jones', email: 'tom@ex.com', password: 'password')
       # user = User.create(first_name: 'Dick', last_name: 'Jones', email: 'tom@ex.com', password: 'password')

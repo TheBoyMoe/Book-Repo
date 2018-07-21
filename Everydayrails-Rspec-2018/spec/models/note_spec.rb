@@ -9,6 +9,10 @@ RSpec.describe Note, type: :model do
   let(:user) { FactoryBot.create(:user ) }
   let(:project) { FactoryBot.create(:project, owner: user) }
 
+  it { is_expected.to validate_presence_of(:message) }
+  it { is_expected.to belong_to(:user) }
+  it { is_expected.to belong_to(:project) }  
+
   describe 'is valid with' do
     it 'a message, project and user' do
       note = Note.new(message: 'New Message', project: project, user: user)

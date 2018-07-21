@@ -4,7 +4,13 @@ RSpec.describe Project, type: :model do
   before do
     @user = FactoryBot.create(:user)
   end
-  
+
+  it { is_expected.to validate_presence_of(:name) }
+  it { is_expected.to have_many(:notes) }
+  it { is_expected.to have_many(:tasks) }
+  it { is_expected.to belong_to(:owner) }
+  it { is_expected.to validate_uniqueness_of(:name).scoped_to(:user_id) }
+
   it 'is valid with a name and owner' do
     project = Project.create(name: 'Test Project', owner: @user)
     expect(project).to be_valid
