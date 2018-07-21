@@ -52,4 +52,24 @@ RSpec.feature 'Projects', type: :feature do
       expect(page).to have_content "#{@user.name}"
     end
   end
+
+  scenario 'user completes a project' do
+    # given a user with a project
+    # and that the user is logged in
+    # when the user visits the project
+    # and the user clicks the complete button
+    # then the project is marked as complete
+
+    user = FactoryBot.create(:user)
+    project = FactoryBot.create(:project, owner: user)
+    login_as user, scope: :user
+    visit project_path(project)
+    expect(page).to_not have_content 'Completed'
+    click_button 'Complete'
+
+    expect(project.reload.completed?).to be true
+    expect(page).to have_content 'Congratulations, this project is complete!'
+    expect(page).to have_content 'Completed'
+    expect(page).to_not have_button 'Complete'
+  end
 end
