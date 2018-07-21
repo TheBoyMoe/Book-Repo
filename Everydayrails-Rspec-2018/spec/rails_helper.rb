@@ -23,6 +23,12 @@ RSpec.configure do |config|
   config.include RequestSpecHelper, type: :request
 
   config.include LoginSupport
+
+  # filtering tagged specs
+  # config.filter_run focus: true 
+  # config.run_all_when_everything_filtered = true # run whole suite when 'focus' not found
+
+  config.filter_run_excluding slow: true # filter any tests tagged 'slow'
 end
 
 Shoulda::Matchers.configure do |config|
