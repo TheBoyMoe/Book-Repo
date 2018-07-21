@@ -7,6 +7,9 @@ RSpec.describe User, type: :model do
   it { is_expected.to validate_presence_of(:last_name) }
   it { is_expected.to validate_presence_of(:email) }
   it { is_expected.to validate_uniqueness_of(:email).case_insensitive }
+  it { is_expected.to have_many(:notes) }
+  it { is_expected.to have_many(:projects) }
+
 
   # 'skip' works on individual tests, NOT blocks, use 'x' instead
   describe 'is valid' do
@@ -16,6 +19,12 @@ RSpec.describe User, type: :model do
       user = FactoryBot.build(:user)
       expect(user).to be_valid
     end
+  end
+
+  it 'sends a welcome email on account creation' do
+    allow(UserMailer).to receive_message_chain(:welcome_email, :deliver_later)
+    user = FactoryBot.create(:user)
+    expect(UserMailer).to have_received(:welcome_email).with(user)
   end
 
   xdescribe 'is invalid' do
@@ -60,13 +69,13 @@ RSpec.describe User, type: :model do
     end
   end
 
-  xit "return's the user's full name as a string" do
+  it "return's the user's full name as a string" do
     # user = User.create( first_name: 'Tom', last_name: 'Jones', email: 'tom@ex.com', password: 'password')
     user = FactoryBot.build(:user, first_name: 'Simon', last_name: 'Jones')
     expect(user.name).to eq 'Simon Jones'
   end
 
-  describe 'User has many' do
+  xdescribe 'User has many' do
     before do
       @user = FactoryBot.create(:user)
       @project = Project.create(name: 'Test Project', owner: @user)
