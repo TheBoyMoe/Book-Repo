@@ -1,25 +1,29 @@
 require 'rails_helper'
 
 RSpec.feature "Notes", type: :feature do
-  before do
-    @user = FactoryBot.create(:user)
-    @project = FactoryBot.create(:project, name: 'RSpec tutorial', owner: @user)
-    # sign_in_as(@user)
-    login_as @user, scope: :user # Devise helper method
-    visit root_path
-    click_link 'RSpec tutorial'
-  end
+
+  # before do
+  #   # sign_in_as(@user)
+  #   login_as @user, scope: :user # Devise helper method
+  #   visit root_path
+  #   click_link 'RSpec tutorial'
+  # end
+
+  let(:user) { FactoryBot.create(:user) }
+  let!(:project) { FactoryBot.create(:project, name: 'RSpec tutorial', owner: user) }
 
   scenario 'user creates a new note' do
+    test_setup(user, 'RSpec tutorial')
     expect {
       click_link 'Add Note'
       fill_in 'note_message',	with: 'New Note Message'
       click_button 'Create Note'
       expect(page).to have_content('New Note Message')
-    }.to change(@project.notes, :count).by(1)
+    }.to change(project.notes, :count).by(1)
   end
 
   scenario 'user edits a note' do
+    test_setup(user, 'RSpec tutorial')
     click_link 'Add Note'
     fill_in 'note_message',	with: 'New Note Message'
     click_button 'Create Note'
@@ -32,6 +36,7 @@ RSpec.feature "Notes", type: :feature do
   end
 
   scenario 'user deletes a note', js: true do
+    test_setup(user, 'RSpec tutorial')
     click_link 'Add Note'
     fill_in 'note_message',	with: 'New Note Message'
     click_button 'Create Note'
@@ -42,6 +47,12 @@ RSpec.feature "Notes", type: :feature do
       end
       page.accept_alert
       expect(page).to_not have_content('New Note Message')
-    }.to change(@project.notes, :count).by(-1)
+    }.to change(project.notes, :count).by(-1)
+  end
+
+  def test_setup(user, link)
+    login_as user, scope: :user # Devise helper method
+    visit root_path
+    click_link(link)
   end
 end
