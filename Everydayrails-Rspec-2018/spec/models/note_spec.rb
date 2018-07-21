@@ -5,6 +5,7 @@ RSpec.describe Note, type: :model do
   it { is_expected.to validate_presence_of(:message) }
   it { is_expected.to belong_to(:user) }
   it { is_expected.to belong_to(:project) }
+  it { is_expected.to have_attached_file(:attachment) }
 
   it 'delegates name to the user who created it' do
     user = FactoryBot.create(:user, first_name: 'Tom', last_name: 'Jones')
@@ -29,7 +30,7 @@ RSpec.describe Note, type: :model do
   let(:project) { FactoryBot.create(:project, owner: user) }
 
   # 'tag' on an individual test only applies to the test
-  describe 'is valid with' do
+  xdescribe 'is valid with' do
     it 'a message, project and user', focus: true do
       note = Note.new(message: 'New Message', project: project, user: user)
       expect(note).to be_valid
@@ -42,7 +43,7 @@ RSpec.describe Note, type: :model do
   end
   
   # add a 'tag' to a block to run everything in the block
-  describe 'is invalid without a', focus: true do
+  xdescribe 'is invalid without a', focus: true do
     it 'message' do
       note = Note.new(message: nil, project: project, user: user)
       expect(note).to_not be_valid
