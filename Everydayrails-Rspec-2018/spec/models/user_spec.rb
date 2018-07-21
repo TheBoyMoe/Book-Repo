@@ -27,6 +27,13 @@ RSpec.describe User, type: :model do
     expect(UserMailer).to have_received(:welcome_email).with(user)
   end
 
+  xit 'performs geocoding', vcr: true do
+    user = FactoryBot.create(:user, last_sign_in_ip: '51.6.99.206')
+    expect {
+      user.geocode
+    }.to change(user, :location).from(nil).to('London, United Kingdom')
+  end
+
   xdescribe 'is invalid' do
     it 'without a fist name' do
       user = User.new(first_name: nil)
