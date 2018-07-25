@@ -29,7 +29,8 @@ module BuildRailsSaasApp
         routing_specs: false,
         request_specs: false,
         model_specs: true,
-        controller_specs: true
+        controller_specs: true,
+        fixtures: true
     end
 
     # Don't generate system test files.
