@@ -1,0 +1,73 @@
+source 'https://rubygems.org'
+
+git_source(:github) do |repo_name|
+  repo_name = "#{repo_name}/#{repo_name}" unless repo_name.include?("/")
+  "https://github.com/#{repo_name}.git"
+end
+
+
+gem 'rails', '~> 5.0.6'
+gem 'pg', '~> 0.18'
+gem 'puma', '~> 3.0'
+gem 'sass-rails', '~> 5.0'
+gem 'uglifier', '>= 1.3.0'
+gem 'coffee-rails', '~> 4.2'
+gem 'turbolinks', '~> 5'
+gem 'jbuilder', '~> 2.5'
+gem 'rack-cors', :require => 'rack/cors'
+gem 'lodash-rails', '~> 4.17', '>= 4.17.10'
+gem 'local_time', '~> 2.0', '>= 2.0.1'
+gem 'devise', '~> 4.4', '>= 4.4.3'
+gem 'devise_invitable', '~> 1.7', '>= 1.7.4'
+gem 'rolify', '~> 5.2'
+gem 'cancancan', '~> 2.2'
+gem 'paper_trail', '~> 9.2'
+gem 'bootstrap-sass', '~> 3.3', '>= 3.3.7'
+gem 'friendly_id', '~> 5.2', '>= 5.2.4'
+gem 'sidekiq', '~> 5.1', '>= 5.1.3'
+gem 'kaminari', '~> 1.1', '>= 1.1.1'
+gem 'money-rails', '~> 1.11'
+gem 'slack-notifier', '~> 2.3', '>= 2.3.2'
+gem 'premailer-rails', '~> 1.10', '>= 1.10.2'
+gem 'griddler', '~> 1.5', '>= 1.5.2'
+gem 'rollbar', '~> 2.16', '>= 2.16.3'
+gem 'aasm', '~> 4.12', '>= 4.12.3'
+gem 'redis', '~> 4.0', '>= 4.0.1'
+gem 'gravatar_image_tag', '~> 1.2'
+gem 'country_select', '~> 3.1', '>= 3.1.1'
+gem 'ransack', '~> 1.8', '>= 1.8.8'
+gem 'griddler-mailgun', '~> 1.0', '>= 1.0.3'
+gem 'slim-rails', '~> 3.1', '>= 3.1.3'
+gem 'jquery-rails', '~> 4.3', '>= 4.3.3'
+
+group :development, :test do
+  gem 'pry-rails'
+  gem 'byebug', platforms: [:mri, :mingw, :x64_mingw]
+end
+
+group :development do
+  gem 'letter_opener', '~> 1.6'
+  gem 'web-console', '>= 3.3.0'
+  gem 'listen', '>= 3.0.5', '< 3.2'
+  gem 'spring'
+  gem 'spring-watcher-listen', '~> 2.0.0'
+  gem 'spring-commands-rspec', '~> 1.0', '>= 1.0.4'
+  gem 'factory_bot_rails', '~> 4.10'
+end
+
+group :test do
+  gem 'rspec-rails', '~> 3.7', '>= 3.7.2'
+  gem 'rails-controller-testing'
+  gem 'database_cleaner', '~> 1.7'
+  gem 'shoulda-matchers', '~> 3.1', '>= 3.1.2'
+  gem 'simplecov', require: false
+  gem 'capybara', '~> 2.15.2'
+  gem 'launchy', '~> 2.4.3'
+  gem 'selenium-webdriver', '~> 3.13'
+  gem 'chromedriver-helper'
+  gem 'vcr'
+  gem 'webmock'  
+end
+
+# Windows does not include zoneinfo files, so bundle the tzinfo-data gem
+gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
