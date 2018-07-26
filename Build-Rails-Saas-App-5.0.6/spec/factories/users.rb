@@ -1,7 +1,7 @@
 FactoryBot.define do
   factory :user do
-    name "MyString"
-    hash_id "MyString"
-    time_zone "MyString"
+    name "Test User"
+    email 'test.user@example.com'
+    password 'password'
   end
 end
