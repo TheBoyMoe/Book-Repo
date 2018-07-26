@@ -19,6 +19,9 @@ RSpec.configure do |config|
 
   # filter any tests tagged 'slow'
   config.filter_run_excluding slow: true
+
+  # RSpec/FactoryBot config, obviates the need to preface every factory_bot method with FactoryBot
+  config.include FactoryBot::Syntax::Methods
 end
 
 Shoulda::Matchers.configure do |config|
